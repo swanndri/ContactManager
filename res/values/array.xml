@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+     <string-array name="OptionsArray">  
+        <item>"Add as New Contact"</item>  
+        <item>"Merge existing"</item>  
+        <item>"Replace existing"</item>  
+        <item>"Cancel"</item>  
+   </string-array>
+</resources>

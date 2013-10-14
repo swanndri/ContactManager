@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="16dp" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="24dp" >
+
+            <ImageView
+                android:id="@+id/add_profilePic"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:src="@drawable/ic_launcher" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:paddingLeft="16dp" >
+
+                <EditText
+                    android:id="@+id/First_Name_enter"
+                    android:layout_width="294dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="First Name"
+                    android:inputType="textPersonName" >
+                </EditText>
+
+                <EditText
+                    android:id="@+id/Surname_enter"
+                    android:layout_width="296dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Surname" />
+
+                <EditText
+                    android:id="@+id/Company_enter"
+                    android:layout_width="296dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="Company"
+                    android:inputType="textPersonName" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/DataBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="65dp" >
+
+            <LinearLayout
+                android:id="@+id/Add_PhoneBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+               	android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/Add_Phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:onClick="addPhoneNumber"
+                    android:clickable="true" >
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:src="@drawable/ic_new" 
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Add a phone number" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:text="__________________________________________________________________________________________________________________________________"
+                            android:textColor="#00BFFF"
+                            android:textSize="6sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Add_EmailBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" 
+                android:paddingTop="45dp"
+                >
+
+                <LinearLayout
+                    android:id="@+id/Add_Email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:onClick="addEmail"
+                    android:clickable="true" >
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:src="@drawable/ic_new" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Add an Email" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:text="__________________________________________________________________________________________________________________________________"
+                            android:textColor="#00BFFF"
+                            android:textSize="6sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/Add_AddBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:id="@+id/Add_Add"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingTop="45dp"
+                    android:onClick="addAdd"
+                    android:clickable="true" >
+
+                    <ImageView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:src="@drawable/ic_new" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:orientation="vertical"
+                        android:paddingLeft="20dp" >
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Add an Address" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="0dp"
+                            android:text="__________________________________________________________________________________________________________________________________"
+                            android:textColor="#00BFFF"
+                            android:textSize="6sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>
