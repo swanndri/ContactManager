@@ -34,7 +34,7 @@ import android.widget.Toast;
 
 public class AddNewContactActivity extends Activity {
 	
-	private List<LinearLayout> phnCount = new ArrayList<LinearLayout>();
+	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
 	private List<LinearLayout> emailCount = new ArrayList<LinearLayout>();
 	private List<LinearLayout> addCount = new ArrayList<LinearLayout>();
 	@Override
@@ -102,7 +102,6 @@ public class AddNewContactActivity extends Activity {
 		LinearLayout addressBoxLayout = (LinearLayout) findViewById(R.id.Add_AddBox);	//Get super (constraining) layout for address'
 		LinearLayout addressBoxDataEntryLayout = createAddDataBox();	//Dynamically create a new data entry box for an address
 		addressBoxLayout.addView(addressBoxDataEntryLayout);	//Add data entry box to super layout
-		addCount.add(addressBoxLayout);
 	}
 
 	/** 
@@ -150,6 +149,9 @@ public class AddNewContactActivity extends Activity {
 		phoneBoxDataEntryLayout.addView(phoneBoxText);
 
 		//Return complete layout
+		phnCount.add(phoneBoxSpinner);
+		phnCount.add(phoneBoxText);
+
 		return phoneBoxDataEntryLayout;	
 	}
 
@@ -361,8 +363,9 @@ public class AddNewContactActivity extends Activity {
 		//For every edittext, get info and save
 		//Make contact
 		//Add to contacts
-		EditText a = (EditText)phnCount.get(0).findViewById(0).findViewById(1).findViewById(3);
-		System.out.println(a.getText().toString());
+		System.out.println(((Spinner) phnCount.get(0)).getSelectedItem().toString());
+		System.out.println(((EditText) phnCount.get(1)).getText().toString());
+		
 		
 	}
 
