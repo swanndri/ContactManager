@@ -80,6 +80,7 @@ public class AddNewContactActivity extends Activity {
 	public void addPhoneNumber(View V){
 		LinearLayout phoneBoxLayout = (LinearLayout) findViewById(R.id.Add_PhoneBox); //Get super (constraining) layout for phone numbers
 		LinearLayout phoneBoxDataEntryLayout = createPhoneDataBox();	//Dynamically create a new data entry box for a phone number
+		phoneBoxDataEntryLayout.setId(0);
 		phoneBoxLayout.addView(phoneBoxDataEntryLayout);	//Add data entry box to the super layout
 		phnCount.add(phoneBoxLayout);
 	}
@@ -116,14 +117,17 @@ public class AddNewContactActivity extends Activity {
 
 		LinearLayout phoneBoxDataEntryLayout = new LinearLayout(this);	//Create new layout to add views to, this will constrain all views needed.
 		phoneBoxDataEntryLayout.setOrientation(LinearLayout.HORIZONTAL);
+		phoneBoxDataEntryLayout.setId(1);
 
 		Spinner phoneBoxSpinner = new Spinner(this);
 		phoneBoxSpinner.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.0f)); //Set params as Match_parent,Match_parent, weight = 0.5
-
+		phoneBoxSpinner.setId(2);
+		
 		EditText phoneBoxText = new EditText(this);
 		phoneBoxText.setInputType(InputType.TYPE_CLASS_PHONE);	//Set edit text type to only accept number (specifically phone numbers)
 		phoneBoxText.setHint("Phone");	//Ghost text phone
 		phoneBoxText.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,1.0f)); // Set params to Match_parent,Wrap_content,weight = 1
+		phoneBoxText.setId(3);
 
 
 		//Define the option required in the spinner
@@ -357,7 +361,9 @@ public class AddNewContactActivity extends Activity {
 		//For every edittext, get info and save
 		//Make contact
 		//Add to contacts
-		phnCount.get(0).
+		EditText a = (EditText)phnCount.get(0).findViewById(0).findViewById(1).findViewById(3);
+		System.out.println(a.getText().toString());
+		
 	}
 
 	public static void mergeExistingContacts(Contact contact){
