@@ -30,6 +30,10 @@
             android:name="com.se206a3.contactmanager.AddNewContactActivity"
             android:label="@string/title_activity_add_new_contact" >
         </activity>
+        <activity
+            android:name="com.se206a3.contactmanager.EditContact"
+            android:label="@string/title_activity_edit_contact" >
+        </activity>
     </application>
 
 </manifest>

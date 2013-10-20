@@ -4,58 +4,44 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.se206a3.Contacts.Contact;
-import com.se206a3.Contacts.ContactsDataSource;
 import com.se206a3.Contacts.Contact.Address;
 import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.Name;
 import com.se206a3.Contacts.Contact.PhNumber;
-import com.se206a3.contactmanager.R;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.text.InputType;
-import android.text.InputFilter.LengthFilter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
-public class AddNewContactActivity extends Activity {
+public class EditContact extends Activity {
 	
 	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
 	private List<android.view.View> emailCount = new ArrayList<android.view.View>();
 	private List<android.view.View> addCount = new ArrayList<android.view.View>();
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_add);
-		addData();
-		//</Sample contact>
-
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.contact_add, menu);
+		getMenuInflater().inflate(R.menu.edit_contact, menu);
 		return true;
 	}
+	
 
-	public void addData(){
-		
-	}
 	/** 
 	 * Dynamically adds a data entry box for a phone number to the contact_add layout.
 	 * */
@@ -415,4 +401,3 @@ public class AddNewContactActivity extends Activity {
 	}
 
 }
-

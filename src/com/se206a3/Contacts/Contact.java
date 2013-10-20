@@ -3,54 +3,71 @@ package com.se206a3.Contacts;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Contacts {
+/**
+ * A Contact object - represents one contact.
+ */
+public class Contact implements Parcelable {
 
-	/**
-	 * An array of sample contact objects.
-	 */
-	public static List<Contact> ITEMS = new ArrayList<Contact>();
+	private Long Id;
+	private Name name;
+	private String company;
 
-	/**
-	 * @return The names (FName+LName) of each contact in the list
-	 */
-	public static List<String> getNames(){
-		List<String> names = new ArrayList<String>();
-		
-		for(Contact i:Contacts.ITEMS){
-			names.add(i.name.getFirstName()+ " " + i.name.getLastName());
-		}
-		return names;
-		
+	public List<PhNumber> numbers = new ArrayList<PhNumber>();
+	public List<Email> emails = new ArrayList<Email>();
+	public List<Address> address = new ArrayList<Address>();
+	public static Contact toDisplay;
+
+	public Contact(){}
+
+
+	public Contact(Name name, String company,List<PhNumber> numbers, List<Email> emails, List<Address> address) {
+		this.setName(name);
+		this.setCompany(company);
+		this.numbers = numbers;
+		this.emails = emails;
+		this.address = address;
 	}
 
-	/**
-	 * A Contact object - represents one contact.
-	 */
-	public static class Contact {
 
-		public Name name;
-		public String company;
-
-		public List<PhNumber> numbers;
-		public List<Email> emails;
-		public List<Address> address;
-
-		public Contact(Name name, String company,List<PhNumber> numbers, List<Email> emails, List<Address> address) {
-			this.name = name;
-			this.company=company;
-			this.numbers = numbers;
-			this.emails = emails;
-			this.address = address;
-		}
-
+	public Long getId() {
+		return Id;
 	}
-	
-	public static class Name{
+
+
+	public void setId(Long id) {
+		Id = id;
+	}
+
+
+	public Name getName() {
+		return name;
+	}
+
+
+	public void setName(Name name) {
+		this.name = name;
+	}
+
+
+	public String getCompany() {
+		return company;
+	}
+
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+
+
+	public static class Name implements Parcelable{
 		private String FirstName;
 		private String LastName;
 
-		
+		public Name(){}
 		public Name(String fName, String lName){
 			this.setFirstName(fName);
 			this.setLastName(lName);
@@ -75,11 +92,22 @@ public class Contacts {
 		public void setLastName(String lastName) {
 			LastName = lastName;
 		}
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(FirstName);
+			dest.writeString(LastName);
+		}
 	}
 
-	public static class PhNumber {
+	public static class PhNumber implements Parcelable {
 		private String type;
 		private String number;
+
+		public PhNumber(){}
 
 		public PhNumber(String type, String number) {
 			this.setType(type);
@@ -102,13 +130,26 @@ public class Contacts {
 			this.number = number;
 		}
 
+		@Override
+		public int describeContents() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(type);
+			dest.writeString(number);
+		}
+
 
 
 	}
-
-	public static class Email {
+	public static class Email implements Parcelable {
 		private String type;
 		private String email;
+
+		public Email(){}
 
 		public Email(String type, String email) {
 			this.setType(type);
@@ -131,9 +172,20 @@ public class Contacts {
 			this.email = email;
 		}
 
+		@Override
+		public int describeContents() {
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(type);
+			dest.writeString(email);
+		}
+
 
 	}
-	public static class Address{
+	public static class Address implements Parcelable{
 		private String type;
 		private String street1;
 		private String street2;
@@ -141,6 +193,8 @@ public class Contacts {
 		private String city;
 		private String postCode;
 		private String country;
+
+		public Address(){}
 
 		public Address(String type,String street1, String street2,String suburb,String city, String postCode, String country){
 			this.setType(type);
@@ -207,8 +261,38 @@ public class Contacts {
 		public void setType(String type) {
 			this.type = type;
 		}
-	}
-	
 
+		@Override
+		public int describeContents() {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+
+		@Override
+		public void writeToParcel(Parcel dest, int flags) {
+			dest.writeString(type);
+			dest.writeString(street1);
+			dest.writeString(street2);
+			dest.writeString(suburb);
+			dest.writeString(city);
+			dest.writeString(country);
+			dest.writeString(postCode);
+		}
+	}
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeParcelable(name, 0);
+		dest.writeString(company);
+		dest.writeTypedList(numbers);
+		dest.writeTypedList(emails);
+		dest.writeTypedList(address);
+	}
 }
+
 

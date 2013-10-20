@@ -1,14 +1,10 @@
 package com.se206a3.contactmanager;
 
-import java.util.ArrayList;
-import java.util.List;
 
-import com.se206a3.Contacts.Contacts;
-import com.se206a3.Contacts.Contacts.Address;
-import com.se206a3.Contacts.Contacts.Contact;
-import com.se206a3.Contacts.Contacts.Email;
-import com.se206a3.Contacts.Contacts.Name;
-import com.se206a3.Contacts.Contacts.PhNumber;
+import com.se206a3.Contacts.Contact;
+import com.se206a3.Contacts.Contact.Address;
+import com.se206a3.Contacts.Contact.Email;
+import com.se206a3.Contacts.Contact.PhNumber;
 import com.se206a3.contactmanager.R;
 
 import android.os.Bundle;
@@ -26,35 +22,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class ContactDetailActivity extends Activity {
-	private Contact contact;
+	public Contact contact;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_detail);
-
-		//<Sample contact>
-		Name Ben = new Name("Ben","Brown");
-
-		List<PhNumber> a = new ArrayList<PhNumber>();
-		a.add(new PhNumber("Mobile","123456789"));
-		a.add(new PhNumber("Home","987654321"));
-		a.add(new PhNumber("Fax","135790"));
-		a.add(new PhNumber("LOL","08642"));
-
-
-		List<Email> b = new ArrayList<Email>();
-		b.add(new Email("Mobile","benbrown93@gmail.com"));
-		b.add(new Email("Lol","benbrown93@gmail.com"));
-		b.add(new Email("cat","benbrown93@gmail.com"));
-
-		List<Address> c = new ArrayList<Address>();
-		c.add(new Address("Home","Mobile","123456789", "def", "ghi", "JKL", "MNO"));
-		c.add(new Address("Work","lol","123456789", "def", "ghi", "JKL", "MNO"));
-		c.add(new Address("Vacation","Cat","123456789", "def", "ghi", "JKL", "MNO"));
-
-		Contact contact1 = new Contact(Ben,"SRG + MRI",a,b,c);
-		//</Sample contact>
-		this.contact = contact1;
+		contact = Contact.toDisplay;
 		addContent(); //Add all content of contact to contact_detail layout dynamically.
 	}
 
@@ -91,8 +64,8 @@ public class ContactDetailActivity extends Activity {
 		LinearLayout AddressBox = (LinearLayout)findViewById(R.id.AddBox);
 
 		//Set three basic items
-		Name.setText(contact.name.getFirstName()+" "+contact.name.getLastName());
-		Company.setText(contact.company);
+		Name.setText(contact.getName().getFirstName()+" "+contact.getName().getLastName());
+		Company.setText(contact.getCompany());
 
 		//Fill super layouts
 		addPhoneNumbers(PhoneBox);
@@ -269,7 +242,7 @@ public class ContactDetailActivity extends Activity {
 			dialog.show();
 			break;
 		default:
-			
+
 		}
 		return super.onOptionsItemSelected(item);
 	}
