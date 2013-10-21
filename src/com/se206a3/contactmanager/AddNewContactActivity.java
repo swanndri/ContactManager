@@ -11,6 +11,7 @@ import com.se206a3.Contacts.Contact.PhNumber;
 import com.se206a3.contactmanager.R;
 
 import android.os.Bundle;
+import android.provider.MediaStore.Images;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -21,14 +22,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 public class AddNewContactActivity extends Activity {
-
+	private static final int SELECT_PICTURE = 1;
 	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
 	private List<android.view.View> emailCount = new ArrayList<android.view.View>();
 	private List<android.view.View> addCount = new ArrayList<android.view.View>();
+	private ImageView img;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -42,8 +45,13 @@ public class AddNewContactActivity extends Activity {
 		getMenuInflater().inflate(R.menu.contact_add, menu);
 		return true;
 	}
-	
 
+	public void addPhoto(View V){
+		Intent intent = new Intent();
+		intent.setType("image/*");
+		intent.setAction(Intent.ACTION_GET_CONTENT);
+		startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
+	}
 
 	/** 
 	 * Dynamically adds a data entry box for a phone number to the contact_add layout.
@@ -99,7 +107,7 @@ public class AddNewContactActivity extends Activity {
 
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text
-		phoneBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,R.array.Phone_Spinner));
+		phoneBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Phone_Spinner)));
 
 		//Add views to super layout
 		phoneBoxDataEntryLayout.addView(phoneBoxSpinner);
@@ -135,7 +143,7 @@ public class AddNewContactActivity extends Activity {
 
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text		
-		emailBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,R.array.Email_Spinner));
+		emailBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Email_Spinner)));
 
 		//Add views to super layout
 		emailBoxDataEntryLayout.addView(emailBoxSpinner);
@@ -179,6 +187,7 @@ public class AddNewContactActivity extends Activity {
 		EditText addressBoxStreet1 = new EditText(this);
 		addressBoxStreet1.setHint("Street");
 
+
 		//Street2 edittext box
 		EditText addressBoxStreet2 = new EditText(this);
 		addressBoxStreet2.setHint("Street");
@@ -209,7 +218,7 @@ public class AddNewContactActivity extends Activity {
 
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text		
-		addressBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,R.array.Address_Spinner));
+		addressBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Address_Spinner)));
 
 		//Add spinner and nested layout to superlayout
 		addressBoxDataEntryLayout.addView(addressBoxSpinner);
@@ -294,8 +303,8 @@ public class AddNewContactActivity extends Activity {
 		Name nm = new Name();
 		String firstName =((EditText)findViewById(R.id.First_Name_enter)).getText().toString();
 		String lastName =((EditText)findViewById(R.id.Surname_enter)).getText().toString();
-		
-		
+
+
 		if(firstName.trim().equals("")&&lastName.trim().equals("")){
 			nm.setFirstName("No");
 			nm.setLastName("Name");
@@ -303,7 +312,7 @@ public class AddNewContactActivity extends Activity {
 			nm.setFirstName(firstName);
 			nm.setLastName(lastName);
 		}
-		
+
 		contact.setName(nm);
 
 		contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
@@ -313,7 +322,11 @@ public class AddNewContactActivity extends Activity {
 			PhNumber phn = new PhNumber();
 			phn.setType(((Spinner) phnCount.get(i)).getSelectedItem().toString());
 			i++;
-			phn.setNumber(((EditText) phnCount.get(i)).getText().toString());
+			if(((EditText) phnCount.get(i)).getText().toString().equals("")){
+				phn.setNumber("No number given");
+			}else{
+				phn.setNumber(((EditText) phnCount.get(i)).getText().toString());
+			}
 			contact.numbers.add(phn);
 		}
 
@@ -321,7 +334,11 @@ public class AddNewContactActivity extends Activity {
 			Email em = new Email();
 			em.setType(((Spinner) emailCount.get(i)).getSelectedItem().toString());
 			i++;
-			em.setEmail(((EditText) emailCount.get(i)).getText().toString());
+			if(((EditText) emailCount.get(i)).getText().toString().equals("")){
+				em.setEmail("No email given");
+			}else{
+				em.setEmail(((EditText) emailCount.get(i)).getText().toString());
+			}
 			contact.emails.add(em);
 		}
 
@@ -329,17 +346,53 @@ public class AddNewContactActivity extends Activity {
 			Address ad = new Address();
 			ad.setType(((Spinner) addCount.get(i)).getSelectedItem().toString());
 			i++;
-			ad.setStreet1(((EditText) addCount.get(i)).getText().toString());
+
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setStreet1("No street given");
+			}else{
+				ad.setStreet1(((EditText) addCount.get(i)).getText().toString());
+			}
+
 			i++;
-			ad.setStreet2(((EditText) addCount.get(i)).getText().toString());
+
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setStreet2("No street given");
+			}else{
+				ad.setStreet2(((EditText) addCount.get(i)).getText().toString());
+			}
+
 			i++;
-			ad.setSuburb(((EditText) addCount.get(i)).getText().toString());
+
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setSuburb("No suburb given");
+			}else{
+				ad.setSuburb(((EditText) addCount.get(i)).getText().toString());
+			}
+
 			i++;
-			ad.setCity(((EditText) addCount.get(i)).getText().toString());
+
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setCity("No city given");
+			}else{
+				ad.setCity(((EditText) addCount.get(i)).getText().toString());
+			}
+
 			i++;
-			ad.setPostCode(((EditText) addCount.get(i)).getText().toString());
+
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setPostCode("No postcode given ");
+			}else{
+				ad.setPostCode(((EditText) addCount.get(i)).getText().toString());
+
+			}
+
 			i++;
-			ad.setCountry(((EditText) addCount.get(i)).getText().toString());
+
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setCountry("No country given");
+			}else{
+				ad.setCountry(((EditText) addCount.get(i)).getText().toString());
+			}
 
 			contact.address.add(ad);
 		}

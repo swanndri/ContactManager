@@ -22,7 +22,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="2"
                 android:src="@drawable/ic_launcher" 
-                android:onClick="=addPhoto"/>
+                android:onClick="addPhoto"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -34,6 +34,7 @@ public class ContactListActivity extends Activity {
 		setContentView(R.layout.contact_list);
 		datasource = new ContactsDataSource(this);
 		datasource.open();
+		datasource.deleteAll();
 		//datasource.createContact(contact);
 		values = datasource.getAllContacts();
 		Collections.sort(values);

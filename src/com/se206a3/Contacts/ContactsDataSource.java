@@ -116,6 +116,7 @@ public class ContactsDataSource {
 		contact.setCompany(cursor.getString(3)); //Set company		
 
 		String phnNumbers = cursor.getString(4); //Get string of phnNumbers
+		System.out.println(phnNumbers);
 		if (phnNumbers.length()!=0){
 			String[] indvPhnNumbers = phnNumbers.split("\\|"); 
 			for(String ph: indvPhnNumbers){
