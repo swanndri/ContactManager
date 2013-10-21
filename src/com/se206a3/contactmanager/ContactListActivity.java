@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,35 +27,13 @@ public class ContactListActivity extends Activity {
 	private List<Contact> values;
 
 
+	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_list);
 		datasource = new ContactsDataSource(this);
 		datasource.open();
-
-//		//<Sample contact>
-//		Name Ben = new Name("Ben","Brown");
-//
-//		List<PhNumber> a = new ArrayList<PhNumber>();
-//		a.add(new PhNumber("Mobile","123456789"));
-//		a.add(new PhNumber("Home","987654321"));
-//		a.add(new PhNumber("Fax","135790"));
-//		a.add(new PhNumber("LOL","08642"));
-//
-//		List<Email> b = new ArrayList<Email>();
-//		b.add(new Email("Mobile","benbrown93@gmail.com"));
-//		b.add(new Email("Lol","benbrown93@gmail.com"));
-//		b.add(new Email("cat","benbrown93@gmail.com"));
-//
-//		List<Address> c = new ArrayList<Address>();
-//		c.add(new Address("Home","Mobile","123456789", "def", "ghi", "JKL", "MNO"));
-//		c.add(new Address("Work","lol","123456789", "def", "ghi", "JKL", "MNO"));
-//		c.add(new Address("Vacation","Cat","123456789", "def", "ghi", "JKL", "MNO"));
-//
-//		Contact contact = new Contact(Ben,"SRG + MRI",a,b,c);
-//		//</Sample contact>
-
 		//datasource.createContact(contact);
 		values = datasource.getAllContacts();
 		Collections.sort(values);
@@ -101,6 +78,7 @@ public class ContactListActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 
+	@SuppressWarnings("unchecked")
 	public void onResume(){
 		super.onResume();
 		values = datasource.getAllContacts();
@@ -126,7 +104,6 @@ public class ContactListActivity extends Activity {
 			View listItemView = inflater.inflate(R.layout.contact_listitem, null);
 
 			TextView name = (TextView) listItemView.findViewById(R.id.List_item_name);
-			ImageView img = (ImageView) listItemView.findViewById(R.id.List_item_image);
 			
 			name.setText(contacts.get(position).getName().getFirstName() + " " + contacts.get(position).getName().getLastName());
 			

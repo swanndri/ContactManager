@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.se206a3.Contacts.Contact;
-import com.se206a3.Contacts.ContactsDataSource;
 import com.se206a3.Contacts.Contact.Address;
 import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.Name;
@@ -14,23 +13,16 @@ import com.se206a3.contactmanager.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.text.InputType;
-import android.text.InputFilter.LengthFilter;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
 public class AddNewContactActivity extends Activity {
 
@@ -41,8 +33,6 @@ public class AddNewContactActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_add);
-		addData();
-		//</Sample contact>
 
 	}
 
@@ -52,10 +42,9 @@ public class AddNewContactActivity extends Activity {
 		getMenuInflater().inflate(R.menu.contact_add, menu);
 		return true;
 	}
+	
 
-	public void addData(){
 
-	}
 	/** 
 	 * Dynamically adds a data entry box for a phone number to the contact_add layout.
 	 * */
@@ -247,40 +236,9 @@ public class AddNewContactActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_Done:
-			//If no exisitng contact matches
 			Contact toBeAdded = makeNewContact();	//Create new contact object	
 			ContactListActivity.datasource.createContact(toBeAdded);
 			this.finish();
-
-			//			//else
-			//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			//			builder.setTitle("Existing contact found");
-			//			builder.setItems(R.array.OptionsArray, new DialogInterface.OnClickListener() {
-			//				public void onClick(DialogInterface dialog, int which) {
-			//					// The 'which' argument contains the index position
-			//					// of the selected item
-			//					switch(which){
-			//					case 1:which=1;
-			//					finish();
-			//					break;
-			//					case 2:which=2;
-			//					mergeExistingContacts(contact);
-			//					break;
-			//					case 3:which=3;
-			//					replaceExistingContacts(contact);
-			//					break;
-			//					case 4:which=3;
-			//					break;
-			//					default:
-			//						break;
-			//
-			//					}
-			//
-			//				}
-			//			});
-			//			AlertDialog dialog = builder.create();
-			//			dialog.show();
-
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -337,7 +295,8 @@ public class AddNewContactActivity extends Activity {
 		String firstName =((EditText)findViewById(R.id.First_Name_enter)).getText().toString();
 		String lastName =((EditText)findViewById(R.id.Surname_enter)).getText().toString();
 		
-		if(firstName==""&&lastName==""){
+		
+		if(firstName.trim().equals("")&&lastName.trim().equals("")){
 			nm.setFirstName("No");
 			nm.setLastName("Name");
 		}else{

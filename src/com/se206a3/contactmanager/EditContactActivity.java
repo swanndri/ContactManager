@@ -80,7 +80,7 @@ public class EditContactActivity extends Activity {
 		LinearLayout phoneBoxLayout = (LinearLayout) findViewById(R.id.Add_PhoneBox); //Get super (constraining) layout for phone numbers
 		LinearLayout phoneBoxDataEntryLayout = createPhoneDataBox();	//Dynamically create a new data entry box for a phone number
 		phoneBoxDataEntryLayout.setId(0);
-		List SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Phone_Spinner));
+		List<String> SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Phone_Spinner));
 
 		for(int i=0; i<((LinearLayout)phoneBoxDataEntryLayout).getChildCount(); ++i) {
 			Spinner phnSpinner = (Spinner) (phoneBoxDataEntryLayout).getChildAt(i);
@@ -104,7 +104,7 @@ public class EditContactActivity extends Activity {
 	public void editEmail(Email em){
 		LinearLayout emailBoxLayout = (LinearLayout) findViewById(R.id.Add_EmailBox);	//Get super (constraining) layout for emails
 		LinearLayout emailBoxDataEntryLayout = createEmailDataBox();	//Dynamically create a new data entry box for an email
-		List SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Email_Spinner));
+		List<String> SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Email_Spinner));
 
 		for(int i=0; i<((LinearLayout)emailBoxDataEntryLayout).getChildCount(); ++i) {
 			Spinner emSpinner = (Spinner) (emailBoxDataEntryLayout).getChildAt(i);
@@ -128,7 +128,7 @@ public class EditContactActivity extends Activity {
 	public void editAdd(Address ad){
 		LinearLayout addressBoxLayout = (LinearLayout) findViewById(R.id.Add_AddBox);	//Get super (constraining) layout for address'
 		LinearLayout addressBoxDataEntryLayout = createAddDataBox();	//Dynamically create a new data entry box for an address
-		List SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Address_Spinner));
+		List<String> SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Address_Spinner));
 
 		System.out.println(((LinearLayout)addressBoxDataEntryLayout).getChildCount());
 		
