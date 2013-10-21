@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -326,40 +327,13 @@ public class EditContactActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_Done:
-			//If no exisitng contact matches
-			Contact toBeAdded = makeNewContact();	//Create new contact object	
+			Contact toBeAdded = makeNewContact();	//Create new contact object
+			Contact.toDisplay = toBeAdded;
 			ContactListActivity.datasource.createContact(toBeAdded);
+			Intent Details = new Intent();
+			Details.setClass(EditContactActivity.this,ContactDetailActivity.class);
+			startActivity(Details);
 			this.finish();
-
-			//			//else
-			//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			//			builder.setTitle("Existing contact found");
-			//			builder.setItems(R.array.OptionsArray, new DialogInterface.OnClickListener() {
-			//				public void onClick(DialogInterface dialog, int which) {
-			//					// The 'which' argument contains the index position
-			//					// of the selected item
-			//					switch(which){
-			//					case 1:which=1;
-			//					finish();
-			//					break;
-			//					case 2:which=2;
-			//					mergeExistingContacts(contact);
-			//					break;
-			//					case 3:which=3;
-			//					replaceExistingContacts(contact);
-			//					break;
-			//					case 4:which=3;
-			//					break;
-			//					default:
-			//						break;
-			//
-			//					}
-			//
-			//				}
-			//			});
-			//			AlertDialog dialog = builder.create();
-			//			dialog.show();
-
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -374,9 +348,6 @@ public class EditContactActivity extends Activity {
 	 * */
 	public void onBackPressed(){
 
-		//If !content
-		//Do something
-		//else
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

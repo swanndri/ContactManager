@@ -10,7 +10,6 @@ import com.se206a3.contactmanager.R;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -19,7 +18,6 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class ContactDetailActivity extends Activity {
 	public Contact contact;
@@ -218,6 +216,7 @@ public class ContactDetailActivity extends Activity {
 			Intent editContact = new Intent();
 			editContact.setClass(this, EditContactActivity.class);
 			startActivity(editContact);
+			this.finish();
 			break;
 		case R.id.action_deleteContact: 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -230,11 +229,11 @@ public class ContactDetailActivity extends Activity {
 			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					// User clicked save and quit button
+					ContactListActivity.datasource.deleteContact(Contact.toDisplay);
 					finish();
-
 				}
 			});
-			builder.setTitle("Are you sure you want to delete CONTACT NAME?");
+			builder.setTitle("Are you sure you want to delete " + Contact.toDisplay.getName().getFirstName() +" "+ Contact.toDisplay.getName().getLastName()+ "?");
 			// Set other dialog properties
 
 			// Create the AlertDialog
@@ -246,5 +245,4 @@ public class ContactDetailActivity extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
-
 }
