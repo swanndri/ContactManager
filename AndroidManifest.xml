@@ -31,7 +31,7 @@
             android:label="@string/title_activity_add_new_contact" >
         </activity>
         <activity
-            android:name="com.se206a3.contactmanager.EditContact"
+            android:name="com.se206a3.contactmanager.EditContactActivity"
             android:label="@string/title_activity_edit_contact" >
         </activity>
     </application>

@@ -1,6 +1,7 @@
 package com.se206a3.contactmanager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.se206a3.Contacts.Contact;
@@ -22,8 +23,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
-public class EditContact extends Activity {
-	
+public class EditContactActivity extends Activity {
+
 	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
 	private List<android.view.View> emailCount = new ArrayList<android.view.View>();
 	private List<android.view.View> addCount = new ArrayList<android.view.View>();
@@ -32,23 +33,61 @@ public class EditContact extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_add);
+		addData();
+		ContactListActivity.datasource.deleteContact(Contact.toDisplay);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.edit_contact, menu);
+		getMenuInflater().inflate(R.menu.contact_add, menu);
 		return true;
 	}
-	
+
+	public void addData(){
+
+		((EditText)findViewById(R.id.First_Name_enter)).setText(Contact.toDisplay.getName().getFirstName());
+		((EditText)findViewById(R.id.Surname_enter)).setText(Contact.toDisplay.getName().getLastName());
+		((EditText)findViewById(R.id.Company_enter)).setText(Contact.toDisplay.getCompany());
+
+		for (PhNumber ph:Contact.toDisplay.numbers){
+			editPhoneNumber(ph);
+		}
+		for (Email em:Contact.toDisplay.emails){
+			editEmail(em);
+		}
+		for(Address ad:Contact.toDisplay.address){
+			editAdd(ad);
+		}
+		
+
+	}
 
 	/** 
 	 * Dynamically adds a data entry box for a phone number to the contact_add layout.
 	 * */
 	public void addPhoneNumber(View V){
+
 		LinearLayout phoneBoxLayout = (LinearLayout) findViewById(R.id.Add_PhoneBox); //Get super (constraining) layout for phone numbers
 		LinearLayout phoneBoxDataEntryLayout = createPhoneDataBox();	//Dynamically create a new data entry box for a phone number
 		phoneBoxDataEntryLayout.setId(0);
+		phoneBoxLayout.addView(phoneBoxDataEntryLayout);	//Add data entry box to the super layout
+	}
+
+	public void editPhoneNumber(PhNumber ph){
+
+		LinearLayout phoneBoxLayout = (LinearLayout) findViewById(R.id.Add_PhoneBox); //Get super (constraining) layout for phone numbers
+		LinearLayout phoneBoxDataEntryLayout = createPhoneDataBox();	//Dynamically create a new data entry box for a phone number
+		phoneBoxDataEntryLayout.setId(0);
+		List SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Phone_Spinner));
+
+		for(int i=0; i<((LinearLayout)phoneBoxDataEntryLayout).getChildCount(); ++i) {
+			Spinner phnSpinner = (Spinner) (phoneBoxDataEntryLayout).getChildAt(i);
+			phnSpinner.setSelection(SpinnerOp.indexOf(ph.getType()));
+			i++;
+			EditText phnEditText = (EditText)(phoneBoxDataEntryLayout).getChildAt(i);
+			phnEditText.setText(ph.getNumber());
+		}
 		phoneBoxLayout.addView(phoneBoxDataEntryLayout);	//Add data entry box to the super layout
 	}
 
@@ -61,12 +100,64 @@ public class EditContact extends Activity {
 		emailBoxLayout.addView(emailBoxDataEntryLayout);	//Add data entry box to the super layout
 	}
 
+	public void editEmail(Email em){
+		LinearLayout emailBoxLayout = (LinearLayout) findViewById(R.id.Add_EmailBox);	//Get super (constraining) layout for emails
+		LinearLayout emailBoxDataEntryLayout = createEmailDataBox();	//Dynamically create a new data entry box for an email
+		List SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Email_Spinner));
+
+		for(int i=0; i<((LinearLayout)emailBoxDataEntryLayout).getChildCount(); ++i) {
+			Spinner emSpinner = (Spinner) (emailBoxDataEntryLayout).getChildAt(i);
+			emSpinner.setSelection(SpinnerOp.indexOf(em.getType()));
+			i++;
+			EditText emEditText = (EditText)(emailBoxDataEntryLayout).getChildAt(i);
+			emEditText.setText(em.getEmail());
+		}
+		emailBoxLayout.addView(emailBoxDataEntryLayout);	//Add data entry box to the super layout
+	}
+
 	/** 
 	 * Dynamically adds a data entry box for a address to the contact_add layout.
 	 * */
 	public void addAdd(View V){
 		LinearLayout addressBoxLayout = (LinearLayout) findViewById(R.id.Add_AddBox);	//Get super (constraining) layout for address'
 		LinearLayout addressBoxDataEntryLayout = createAddDataBox();	//Dynamically create a new data entry box for an address
+		addressBoxLayout.addView(addressBoxDataEntryLayout);	//Add data entry box to super layout
+	}
+
+	public void editAdd(Address ad){
+		LinearLayout addressBoxLayout = (LinearLayout) findViewById(R.id.Add_AddBox);	//Get super (constraining) layout for address'
+		LinearLayout addressBoxDataEntryLayout = createAddDataBox();	//Dynamically create a new data entry box for an address
+		List SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Address_Spinner));
+
+		System.out.println(((LinearLayout)addressBoxDataEntryLayout).getChildCount());
+		
+		for(int i=0; i<((LinearLayout)addressBoxDataEntryLayout).getChildCount();i++) {
+			Spinner adSpinner = (Spinner) (addressBoxDataEntryLayout).getChildAt(i);
+			adSpinner.setSelection(SpinnerOp.indexOf(ad.getType()));
+			i++;
+			LinearLayout tf = (LinearLayout)addressBoxDataEntryLayout.getChildAt(i);
+			for(int j=0;j<tf.getChildCount();j++){
+				
+				EditText street1EditText = (EditText)(tf).getChildAt(j);
+				street1EditText.setText(ad.getStreet1());
+				j++;
+				EditText street2EditText = (EditText)(tf).getChildAt(j);
+				street2EditText.setText(ad.getStreet2());
+				j++;
+				EditText suburbEditText = (EditText)(tf).getChildAt(j);
+				suburbEditText.setText(ad.getSuburb());
+				j++;
+				EditText cityEditText = (EditText)(tf).getChildAt(j);
+				cityEditText.setText(ad.getCity());
+				j++;
+				EditText postCodeEditText = (EditText)(tf).getChildAt(j);
+				postCodeEditText.setText(ad.getPostCode());
+				j++;
+				EditText countryEditText = (EditText)(tf).getChildAt(j);
+				countryEditText.setText(ad.getCountry());
+			}
+			
+		}
 		addressBoxLayout.addView(addressBoxDataEntryLayout);	//Add data entry box to super layout
 	}
 
@@ -87,33 +178,21 @@ public class EditContact extends Activity {
 		Spinner phoneBoxSpinner = new Spinner(this);
 		phoneBoxSpinner.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.0f)); //Set params as Match_parent,Match_parent, weight = 0.5
 		phoneBoxSpinner.setId(2);
-		
+
 		EditText phoneBoxText = new EditText(this);
 		phoneBoxText.setInputType(InputType.TYPE_CLASS_PHONE);	//Set edit text type to only accept number (specifically phone numbers)
 		phoneBoxText.setHint("Phone");	//Ghost text phone
 		phoneBoxText.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,1.0f)); // Set params to Match_parent,Wrap_content,weight = 1
 		phoneBoxText.setId(3);
 
-
-		//Define the option required in the spinner
-		List<String> PhoneType = new ArrayList<String>();
-		PhoneType.add("Home");
-		PhoneType.add("Work");
-		PhoneType.add("Mobile");
-		PhoneType.add("Main");
-		PhoneType.add("Home Fax");
-		PhoneType.add("Work Fax");
-		PhoneType.add("Pager");
-		PhoneType.add("Other");
-
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text
-		phoneBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,PhoneType));
+		phoneBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Phone_Spinner)));
 
 		//Add views to super layout
 		phoneBoxDataEntryLayout.addView(phoneBoxSpinner);
 		phoneBoxDataEntryLayout.addView(phoneBoxText);
-		
+
 		//Add Views to list for easy data retrieve
 		phnCount.add(phoneBoxSpinner);
 		phnCount.add(phoneBoxText);
@@ -142,24 +221,19 @@ public class EditContact extends Activity {
 		emailBoxText.setHint("Email");	//Ghost text email
 		emailBoxText.setLayoutParams(new LinearLayout.LayoutParams(-1,-2,1.0f)); //Set params to Match_parent,Wrap_content,weight = 1
 
-		//Define options for spinner
-		List<String> PhoneType = new ArrayList<String>();
-		PhoneType.add("Home");
-		PhoneType.add("Work");
-		PhoneType.add("Other");
 
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text		
-		emailBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,PhoneType));
+		emailBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Email_Spinner)));
 
 		//Add views to super layout
 		emailBoxDataEntryLayout.addView(emailBoxSpinner);
 		emailBoxDataEntryLayout.addView(emailBoxText);
-		
+
 		//Add views to list for easy data retrieve
 		emailCount.add(emailBoxSpinner);
 		emailCount.add(emailBoxText);
-		
+
 		//Return complete layout
 		return emailBoxDataEntryLayout;
 
@@ -222,20 +296,15 @@ public class EditContact extends Activity {
 		addressBoxTextFields.addView(addressBoxPostCode);
 		addressBoxTextFields.addView(addressBoxCountry);
 
-		//Define options for spinner
-		List<String> AddressType = new ArrayList<String>();
-		AddressType.add("Home");
-		AddressType.add("Work");
-		AddressType.add("Other");
 
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text		
-		addressBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,AddressType));
+		addressBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Address_Spinner)));
 
 		//Add spinner and nested layout to superlayout
 		addressBoxDataEntryLayout.addView(addressBoxSpinner);
 		addressBoxDataEntryLayout.addView(addressBoxTextFields);
-		
+
 		//Add views to list for easy data retrieve
 		addCount.add(addressBoxSpinner);
 		addCount.add(addressBoxStreet1);
@@ -262,34 +331,34 @@ public class EditContact extends Activity {
 			ContactListActivity.datasource.createContact(toBeAdded);
 			this.finish();
 
-//			//else
-//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//			builder.setTitle("Existing contact found");
-//			builder.setItems(R.array.OptionsArray, new DialogInterface.OnClickListener() {
-//				public void onClick(DialogInterface dialog, int which) {
-//					// The 'which' argument contains the index position
-//					// of the selected item
-//					switch(which){
-//					case 1:which=1;
-//					finish();
-//					break;
-//					case 2:which=2;
-//					mergeExistingContacts(contact);
-//					break;
-//					case 3:which=3;
-//					replaceExistingContacts(contact);
-//					break;
-//					case 4:which=3;
-//					break;
-//					default:
-//						break;
-//
-//					}
-//
-//				}
-//			});
-//			AlertDialog dialog = builder.create();
-//			dialog.show();
+			//			//else
+			//			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			//			builder.setTitle("Existing contact found");
+			//			builder.setItems(R.array.OptionsArray, new DialogInterface.OnClickListener() {
+			//				public void onClick(DialogInterface dialog, int which) {
+			//					// The 'which' argument contains the index position
+			//					// of the selected item
+			//					switch(which){
+			//					case 1:which=1;
+			//					finish();
+			//					break;
+			//					case 2:which=2;
+			//					mergeExistingContacts(contact);
+			//					break;
+			//					case 3:which=3;
+			//					replaceExistingContacts(contact);
+			//					break;
+			//					case 4:which=3;
+			//					break;
+			//					default:
+			//						break;
+			//
+			//					}
+			//
+			//				}
+			//			});
+			//			AlertDialog dialog = builder.create();
+			//			dialog.show();
 
 		}
 		return super.onOptionsItemSelected(item);
@@ -342,15 +411,15 @@ public class EditContact extends Activity {
 		//Make contact
 		//Add to contacts
 		Contact contact = new Contact();
-		
+
 		Name nm = new Name();
 		nm.setFirstName(((EditText)findViewById(R.id.First_Name_enter)).getText().toString());
 		nm.setLastName(((EditText)findViewById(R.id.Surname_enter)).getText().toString());
 		contact.setName(nm);
-		
+
 		contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
-		
-		
+
+
 		for(int i=0;i<phnCount.size();i++){
 			PhNumber phn = new PhNumber();
 			phn.setType(((Spinner) phnCount.get(i)).getSelectedItem().toString());
@@ -358,7 +427,7 @@ public class EditContact extends Activity {
 			phn.setNumber(((EditText) phnCount.get(i)).getText().toString());
 			contact.numbers.add(phn);
 		}
-		
+
 		for(int i=0;i<emailCount.size();i++){
 			Email em = new Email();
 			em.setType(((Spinner) emailCount.get(i)).getSelectedItem().toString());
@@ -366,7 +435,7 @@ public class EditContact extends Activity {
 			em.setEmail(((EditText) emailCount.get(i)).getText().toString());
 			contact.emails.add(em);
 		}
-		
+
 		for(int i=0;i<addCount.size();i++){
 			Address ad = new Address();
 			ad.setType(((Spinner) addCount.get(i)).getSelectedItem().toString());
@@ -382,13 +451,13 @@ public class EditContact extends Activity {
 			ad.setPostCode(((EditText) addCount.get(i)).getText().toString());
 			i++;
 			ad.setCountry(((EditText) addCount.get(i)).getText().toString());
-			
+
 			contact.address.add(ad);
 		}
 		return contact;
-		
-		
-		
+
+
+
 	}
 
 	public static void mergeExistingContacts(Contact contact){

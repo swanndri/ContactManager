@@ -6,4 +6,13 @@
         <item>"Replace existing"</item>  
         <item>"Cancel"</item>  
    </string-array>
+     <string-array name="Phone_Spinner">
+         <item >Home</item>
+         <item >Work</item><item >Mobile</item><item >Main</item><item >Home Fax</item><item >Work Fax</item><item >Pager</item><item >Other</item>
+     </string-array>
+     <string-array name="Email_Spinner">
+         <item >Home</item><item >Work</item><item >Other</item>
+     </string-array>
+     <string-array name="Address_Spinner"><item >Home</item><item >Work</item><item >Other</item>
+     </string-array>
 </resources>

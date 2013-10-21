@@ -215,9 +215,9 @@ public class ContactDetailActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_editContact:
-			Intent addNewContact = new Intent();
-			addNewContact.setClass(this, AddNewContactActivity.class);
-			startActivity(addNewContact);
+			Intent editContact = new Intent();
+			editContact.setClass(this, EditContactActivity.class);
+			startActivity(editContact);
 			break;
 		case R.id.action_deleteContact: 
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);

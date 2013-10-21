@@ -1,6 +1,7 @@
 package com.se206a3.contactmanager;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.se206a3.Contacts.Contact;
@@ -62,6 +63,7 @@ public class ContactListActivity extends Activity {
 
 		//datasource.createContact(contact);
 		values = datasource.getAllContacts();
+		Collections.sort(values);
 		createContactList();
 	}
 
