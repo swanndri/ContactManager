@@ -108,6 +108,7 @@ public class ContactListActivity extends Activity {
 	public void onResume(){
 		super.onResume();
 		values = datasource.getAllContacts();
+		Collections.sort(values);
 		la = new ContactListAdapter(this, values);
 		contactListV.setAdapter(la);
 	}
