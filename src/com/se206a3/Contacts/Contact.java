@@ -14,7 +14,7 @@ public class Contact implements Comparable {
 	private Long Id;
 	private Name name;
 	private String company;
-	private String ImagePath;
+	private String imagePath;
 	
 	public List<PhNumber> numbers = new ArrayList<PhNumber>();
 	public List<Email> emails = new ArrayList<Email>();
@@ -24,9 +24,10 @@ public class Contact implements Comparable {
 	public Contact(){}
 
 
-	public Contact(Name name, String company,List<PhNumber> numbers, List<Email> emails, List<Address> address) {
+	public Contact(Name name, String company, String imagePath, List<PhNumber> numbers, List<Email> emails, List<Address> address) {
 		this.setName(name);
 		this.setCompany(company);
+		this.setImagePath(imagePath);
 		
 		this.numbers = numbers;
 		this.emails = emails;
@@ -262,12 +263,12 @@ public class Contact implements Comparable {
 
 
 	public String getImagePath() {
-		return ImagePath;
+		return imagePath;
 	}
 
 
 	public void setImagePath(String selectedImagePath) {
-		this.ImagePath = selectedImagePath;
+		this.imagePath = selectedImagePath;
 	}
 }
 

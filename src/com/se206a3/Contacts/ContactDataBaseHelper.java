@@ -12,6 +12,7 @@ public class ContactDataBaseHelper extends SQLiteOpenHelper {
   public static final String COLUMN_FIRSTNAME = "first_name";
   public static final String COLUMN_LASTNAME = "last_name";
   public static final String COLUMN_COMPANY = "company";
+  public static final String COLUMN_IMAGE = "image_path";
   public static final String COLUMN_PHONENUMBERS = "phone_numbers";
   public static final String COLUMN_EMAILS = "emails";
   public static final String COLUMN_ADDRESSES = "addesses";
@@ -24,9 +25,10 @@ public class ContactDataBaseHelper extends SQLiteOpenHelper {
   private static final String DATABASE_CREATE = "create table "
       + TABLE_CONTACTS + "(" 
       + COLUMN_ID + " integer primary key autoincrement, " 
-      + COLUMN_FIRSTNAME + " text not null, " 
-      + COLUMN_LASTNAME + " text not null, " 
+      + COLUMN_FIRSTNAME + " TEXT, " 
+      + COLUMN_LASTNAME + " TEXT, " 
       + COLUMN_COMPANY + " TEXT, "
+      + COLUMN_IMAGE + " TEXT, "
       + COLUMN_PHONENUMBERS + " TEXT, "
       + COLUMN_EMAILS + " TEXT, "
       + COLUMN_ADDRESSES + " TEXT "

@@ -23,6 +23,7 @@ public class ContactsDataSource {
 			ContactDataBaseHelper.COLUMN_FIRSTNAME,
 			ContactDataBaseHelper.COLUMN_LASTNAME,
 			ContactDataBaseHelper.COLUMN_COMPANY,
+			ContactDataBaseHelper.COLUMN_IMAGE,
 			ContactDataBaseHelper.COLUMN_PHONENUMBERS,
 			ContactDataBaseHelper.COLUMN_EMAILS,
 			ContactDataBaseHelper.COLUMN_ADDRESSES};
@@ -44,6 +45,7 @@ public class ContactsDataSource {
 		values.put(ContactDataBaseHelper.COLUMN_FIRSTNAME, contact.getName().getFirstName());
 		values.put(ContactDataBaseHelper.COLUMN_LASTNAME, contact.getName().getLastName());
 		values.put(ContactDataBaseHelper.COLUMN_COMPANY, contact.getCompany());
+		values.put(ContactDataBaseHelper.COLUMN_IMAGE, contact.getImagePath());
 		StringBuilder PhoneNumbers_String = new StringBuilder();
 		StringBuilder Emails_String = new StringBuilder();
 		StringBuilder Address_String = new StringBuilder();
@@ -67,8 +69,8 @@ public class ContactsDataSource {
 					+ "," + address.getStreet2()
 					+ "," + address.getSuburb()
 					+ "," + address.getCity()
-					+ "," + address.getCountry()
 					+ "," + address.getPostCode()
+					+ "," + address.getCountry()
 					+ "|");
 		}
 		values.put(ContactDataBaseHelper.COLUMN_ADDRESSES, Address_String.toString());
@@ -113,9 +115,10 @@ public class ContactsDataSource {
 		Contact contact = new Contact(); //New instance of contact to be filled and returned
 		contact.setId(cursor.getLong(0));  //Set Id of contact from first column
 		contact.setName(new Name(cursor.getString(1),cursor.getString(2))); //Set name with Name object
-		contact.setCompany(cursor.getString(3)); //Set company		
+		contact.setCompany(cursor.getString(3)); //Set company
+		contact.setImagePath(cursor.getString(4));
 
-		String phnNumbers = cursor.getString(4); //Get string of phnNumbers
+		String phnNumbers = cursor.getString(5); //Get string of phnNumbers
 		System.out.println(phnNumbers);
 		if (phnNumbers.length()!=0){
 			String[] indvPhnNumbers = phnNumbers.split("\\|"); 
@@ -125,7 +128,7 @@ public class ContactsDataSource {
 			}
 		}
 
-		String emails = cursor.getString(5);
+		String emails = cursor.getString(6);
 		if(emails.length()!=0){
 			String[] indvEmails = emails.split("\\|");
 			for (String em: indvEmails){
@@ -134,7 +137,7 @@ public class ContactsDataSource {
 			}
 		}
 
-		String address = cursor.getString(6);
+		String address = cursor.getString(7);
 		if(address.length()!=0){
 			String[] indvAddress = address.split("\\|");
 			for (String ad: indvAddress){
