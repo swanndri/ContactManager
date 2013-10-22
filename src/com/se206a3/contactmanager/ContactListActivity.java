@@ -7,7 +7,9 @@ import com.se206a3.Contacts.Contact;
 import com.se206a3.Contacts.ContactsDataSource;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,13 +27,14 @@ public class ContactListActivity extends Activity {
 	private ListAdapter la;
 	public static ContactsDataSource datasource;
 	private List<Contact> values;
-
+	private SwipeDetector sd;
 
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_list);
+		sd = new SwipeDetector();
 		datasource = new ContactsDataSource(this);
 		datasource.open();
 		datasource.deleteAll();
@@ -49,7 +52,8 @@ public class ContactListActivity extends Activity {
 	}
 
 	public void createContactList(){
-		contactListV = (ListView)findViewById(R.id.Contact_list);	
+		contactListV = (ListView)findViewById(R.id.Contact_list);
+		contactListV.setOnTouchListener(sd);
 		contactListV.setOnItemClickListener(new ListItemClickList());
 
 	}
@@ -59,11 +63,35 @@ public class ContactListActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parentView, View clickedView, int clickedViewPosition,
 				long id) {
-			// TODO Auto-generated method stub
-			Intent Details = new Intent();
-			Contact.toDisplay = values.get(clickedViewPosition);
-			Details.setClass(ContactListActivity.this,ContactDetailActivity.class);
-			startActivity(Details);
+			Contact contact = values.get(clickedViewPosition);
+			Contact.toDisplay = contact;
+
+			if(sd.swipeDetected()){
+				AlertDialog.Builder builder = new AlertDialog.Builder(ContactListActivity.this);
+				builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// User cancelled the dialog
+					}
+				});
+				builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						// User clicked save and quit button
+						ContactListActivity.datasource.deleteContact(Contact.toDisplay);
+						onResume();
+					}
+				});
+				builder.setTitle("Are you sure you want to delete " + Contact.toDisplay.getName().getFirstName() +" "+ Contact.toDisplay.getName().getLastName()+ "?");
+				// Set other dialog properties
+
+				// Create the AlertDialog
+				AlertDialog dialog = builder.create();
+				dialog.show();
+			}else{
+				// TODO Auto-generated method stub
+				Intent Details = new Intent();
+				Details.setClass(ContactListActivity.this,ContactDetailActivity.class);
+				startActivity(Details);
+			}
 		}
 
 	}
@@ -105,9 +133,9 @@ public class ContactListActivity extends Activity {
 			View listItemView = inflater.inflate(R.layout.contact_listitem, null);
 
 			TextView name = (TextView) listItemView.findViewById(R.id.List_item_name);
-			
+
 			name.setText(contacts.get(position).getName().getFirstName() + " " + contacts.get(position).getName().getLastName());
-			
+
 			return listItemView;
 		}
 	}

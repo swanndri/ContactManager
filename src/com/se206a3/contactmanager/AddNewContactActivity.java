@@ -402,14 +402,5 @@ public class AddNewContactActivity extends Activity {
 
 	}
 
-	public static void mergeExistingContacts(Contact contact){
-		//Merge exisiting contact with new one
-		//No idea how to do this yet
-	}
-	public static void replaceExistingContacts(Contact contact){
-		//Replace exisiting contact with new one
-		//No idea how to do this yet
-	}
-
 }
 
