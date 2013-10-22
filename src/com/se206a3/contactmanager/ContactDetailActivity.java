@@ -102,6 +102,12 @@ public class ContactDetailActivity extends Activity {
 			//Add layout to super layout
 			PhoneBox.addView(phoneNumberLayout);
 		}
+		
+		if(contact.numbers.size()==0){
+			TextView phoneNumber = new TextView(this);
+			phoneNumber.setText("No phone numbers to display");
+			PhoneBox.addView(phoneNumber);
+		}
 
 		//Add graphical break bar
 		addBreakbar(PhoneBox);
@@ -138,6 +144,13 @@ public class ContactDetailActivity extends Activity {
 			//Add layout to super layout
 			EmailBox.addView(emailLayout);
 		}
+		
+		if(contact.emails.size()==0){
+			TextView email = new TextView(this);
+			email.setText("No phone numbers to display");
+			EmailBox.addView(email);
+		}
+
 		//Add graphical break bar
 		addBreakbar(EmailBox);
 
@@ -191,6 +204,13 @@ public class ContactDetailActivity extends Activity {
 			//Add linear layout to super layout
 			AddressBox.addView(addressLayout);
 		}
+		
+		if(contact.address.size()==0){
+			TextView address = new TextView(this);
+			address.setText("No phone numbers to display");
+			AddressBox.addView(address);
+		}
+
 
 		addBreakbar(AddressBox);
 
