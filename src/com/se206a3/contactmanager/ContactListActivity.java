@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.se206a3.Contacts.Contact;
 import com.se206a3.Contacts.ContactsDataSource;
+import com.se206a3.contactmanager.SwipeDetector.Action;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -67,6 +69,8 @@ public class ContactListActivity extends Activity {
 			Contact.toDisplay = contact;
 
 			if(sd.swipeDetected()){
+				
+				if(sd.getSwipeType()==Action.RL){
 				AlertDialog.Builder builder = new AlertDialog.Builder(ContactListActivity.this);
 				builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
@@ -86,6 +90,11 @@ public class ContactListActivity extends Activity {
 				// Create the AlertDialog
 				AlertDialog dialog = builder.create();
 				dialog.show();
+				}else if(sd.getSwipeType()==Action.LR){
+					Intent Edit = new Intent();
+					Edit.setClass(ContactListActivity.this,EditContactActivity.class);
+					startActivity(Edit);
+				}
 			}else{
 				// TODO Auto-generated method stub
 				Intent Details = new Intent();
