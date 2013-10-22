@@ -9,6 +9,8 @@ import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.Name;
 import com.se206a3.Contacts.Contact.PhNumber;
 import com.se206a3.contactmanager.R;
+import com.se206a3.contactmanager.ContactListActivity.ListItemClickList;
+import com.se206a3.contactmanager.SwipeDetector.Action;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +24,8 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -30,7 +34,7 @@ import android.widget.Spinner;
 
 public class AddNewContactActivity extends Activity {
 	private SwipeDetector sd;
-	
+
 	private static final int SELECT_PICTURE = 1;
 	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
 	private List<android.view.View> emailCount = new ArrayList<android.view.View>();
@@ -121,6 +125,7 @@ public class AddNewContactActivity extends Activity {
 		phoneBoxDataEntryLayout.setOrientation(LinearLayout.HORIZONTAL);
 		phoneBoxDataEntryLayout.setId(1);
 		phoneBoxDataEntryLayout.setOnTouchListener(sd);
+		phoneBoxDataEntryLayout.setOnClickListener(new ClickList());
 
 		Spinner phoneBoxSpinner = new Spinner(this);
 		phoneBoxSpinner.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.0f)); //Set params as Match_parent,Match_parent, weight = 0.5
@@ -430,6 +435,37 @@ public class AddNewContactActivity extends Activity {
 
 
 	}
+	class ClickList implements OnClickListener{			
+			@Override
+			public void onClick(View v) {
+				if(sd.swipeDetected()){
+					if(sd.getSwipeType()==Action.RL){
+					AlertDialog.Builder builder = new AlertDialog.Builder(AddNewContactActivity.this);
+					builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							// User cancelled the dialog
+						}
+					});
+					builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							// User clicked save and quit button
+						}
+					});
+					builder.setTitle("Are you sure you want to delete " + Contact.toDisplay.getName().getFirstName() +" "+ Contact.toDisplay.getName().getLastName()+ "?");
+					// Set other dialog properties
 
+					// Create the AlertDialog
+					AlertDialog dialog = builder.create();
+					dialog.show();
+					}else if(sd.getSwipeType()==Action.LR){
+						Intent Edit = new Intent();
+						Edit.setClass(AddNewContactActivity.this,EditContactActivity.class);
+						startActivity(Edit);
+					}
+				}else{
+				}				
+			}
+	}
 }
+
 
