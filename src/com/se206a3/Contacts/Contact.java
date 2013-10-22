@@ -9,12 +9,13 @@ import android.os.Parcelable;
 /**
  * A Contact object - represents one contact.
  */
-public class Contact implements Parcelable, Comparable {
+public class Contact implements Comparable {
 
 	private Long Id;
 	private Name name;
 	private String company;
-
+	private String ImagePath;
+	
 	public List<PhNumber> numbers = new ArrayList<PhNumber>();
 	public List<Email> emails = new ArrayList<Email>();
 	public List<Address> address = new ArrayList<Address>();
@@ -26,6 +27,7 @@ public class Contact implements Parcelable, Comparable {
 	public Contact(Name name, String company,List<PhNumber> numbers, List<Email> emails, List<Address> address) {
 		this.setName(name);
 		this.setCompany(company);
+		
 		this.numbers = numbers;
 		this.emails = emails;
 		this.address = address;
@@ -63,7 +65,7 @@ public class Contact implements Parcelable, Comparable {
 
 
 
-	public static class Name implements Parcelable{
+	public static class Name {
 		private String FirstName;
 		private String LastName;
 
@@ -92,18 +94,9 @@ public class Contact implements Parcelable, Comparable {
 		public void setLastName(String lastName) {
 			LastName = lastName;
 		}
-		@Override
-		public int describeContents() {
-			return 0;
-		}
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {
-			dest.writeString(FirstName);
-			dest.writeString(LastName);
-		}
 	}
 
-	public static class PhNumber implements Parcelable {
+	public static class PhNumber {
 		private String type;
 		private String number;
 
@@ -129,23 +122,10 @@ public class Contact implements Parcelable, Comparable {
 		public void setNumber(String number) {
 			this.number = number;
 		}
-
-		@Override
-		public int describeContents() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {
-			dest.writeString(type);
-			dest.writeString(number);
-		}
-
-
-
 	}
-	public static class Email implements Parcelable {
+
+
+	public static class Email {
 		private String type;
 		private String email;
 
@@ -172,20 +152,11 @@ public class Contact implements Parcelable, Comparable {
 			this.email = email;
 		}
 
-		@Override
-		public int describeContents() {
-			return 0;
-		}
 
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {
-			dest.writeString(type);
-			dest.writeString(email);
-		}
 
 
 	}
-	public static class Address implements Parcelable{
+	public static class Address {
 		private String type;
 		private String street1;
 		private String street2;
@@ -262,37 +233,9 @@ public class Contact implements Parcelable, Comparable {
 			this.type = type;
 		}
 
-		@Override
-		public int describeContents() {
-			// TODO Auto-generated method stub
-			return 0;
-		}
-
-		@Override
-		public void writeToParcel(Parcel dest, int flags) {
-			dest.writeString(type);
-			dest.writeString(street1);
-			dest.writeString(street2);
-			dest.writeString(suburb);
-			dest.writeString(city);
-			dest.writeString(country);
-			dest.writeString(postCode);
-		}
-	}
-	@Override
-	public int describeContents() {
-		return 0;
 	}
 
 
-	@Override
-	public void writeToParcel(Parcel dest, int flags) {
-		dest.writeParcelable(name, 0);
-		dest.writeString(company);
-		dest.writeTypedList(numbers);
-		dest.writeTypedList(emails);
-		dest.writeTypedList(address);
-	}
 
 
 	@Override
@@ -315,6 +258,16 @@ public class Contact implements Parcelable, Comparable {
 			i = -1;
 		}
 		return i;
+	}
+
+
+	public String getImagePath() {
+		return ImagePath;
+	}
+
+
+	public void setImagePath(String selectedImagePath) {
+		this.ImagePath = selectedImagePath;
 	}
 }
 

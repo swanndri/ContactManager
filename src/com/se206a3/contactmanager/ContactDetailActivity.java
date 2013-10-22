@@ -87,13 +87,14 @@ public class ContactDetailActivity extends Activity {
 			//Define type textview
 			TextView phoneType = new TextView(this);
 			phoneType.setText(contact.numbers.get(pos).getType());
-			phoneType.setTextSize(10);
+			phoneType.setTextSize(16);
 			phoneType.setTextColor(Color.parseColor("#00BFFF")); //Set light blue
 			phoneType.setPadding(0, 6, 0, 0);	//Pad 6dp to bottom
 
 			//Define number textview
 			TextView phoneNumber = new TextView(this);
 			phoneNumber.setText(contact.numbers.get(pos).getNumber());
+			phoneNumber.setTextSize(24);
 
 			//Add textviews to layout
 			phoneNumberLayout.addView(phoneType);
@@ -129,13 +130,14 @@ public class ContactDetailActivity extends Activity {
 			//Define type textview
 			TextView emailType = new TextView(this);
 			emailType.setText(contact.emails.get(pos).getType());
-			emailType.setTextSize(10);
+			emailType.setTextSize(16);
 			emailType.setTextColor(Color.parseColor("#00BFFF"));
 			emailType.setPadding(0, 6, 0, 0);
 
 			//Define number textview
 			TextView email = new TextView(this);
 			email.setText(contact.emails.get(pos).getEmail());
+			email.setTextSize(24);
 
 			//Add textviews to layout
 			emailLayout.addView(emailType);
@@ -170,27 +172,35 @@ public class ContactDetailActivity extends Activity {
 			//Create relevant text views
 			TextView addressType = new TextView(this);
 			addressType.setText(contact.address.get(pos).getType());
-			addressType.setTextSize(10);
+			addressType.setTextSize(16);
 			addressType.setTextColor(Color.parseColor("#00BFFF"));
 			addressType.setPadding(0, 6, 0, 0);
 
 			TextView street1 = new TextView(this);
 			street1.setText(contact.address.get(pos).getStreet1());
-
+			street1.setTextSize(20);
+			
 			TextView street2 = new TextView(this);
 			street2.setText(contact.address.get(pos).getStreet2());
+			street2.setTextSize(20);
 
 			TextView suburb = new TextView(this);
 			suburb.setText(contact.address.get(pos).getSuburb());
+			suburb.setTextSize(20);
 
 			TextView city = new TextView(this);
 			city.setText(contact.address.get(pos).getCity());
+			city.setTextSize(20);
 
 			TextView postCode = new TextView(this);
 			postCode.setText(contact.address.get(pos).getPostCode());
+			postCode.setTextSize(20);
+
 
 			TextView country = new TextView(this);
 			country.setText(contact.address.get(pos).getCountry());
+			country.setTextSize(20);
+
 
 			//Add to linear layout
 			addressLayout.addView(addressType);

@@ -10,12 +10,15 @@ import com.se206a3.Contacts.Contact.Name;
 import com.se206a3.Contacts.Contact.PhNumber;
 import com.se206a3.contactmanager.R;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -32,11 +35,13 @@ public class AddNewContactActivity extends Activity {
 	private List<android.view.View> emailCount = new ArrayList<android.view.View>();
 	private List<android.view.View> addCount = new ArrayList<android.view.View>();
 	private ImageView img;
+	private String selectedImagePath;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_add);
-
+		img = ((ImageView)findViewById(R.id.add_profilePic));
 	}
 
 	@Override
@@ -53,6 +58,24 @@ public class AddNewContactActivity extends Activity {
 		startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
 	}
 
+	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	        if (resultCode == RESULT_OK) {
+	            if (requestCode == SELECT_PICTURE) {
+	                Uri selectedImageUri = data.getData();
+	                selectedImagePath = getPath(selectedImageUri);
+	                System.out.println("Image Path : " + selectedImagePath);
+	                img.setImageURI(selectedImageUri);
+	            }
+	        }
+	    }
+	   public String getPath(Uri uri) {
+	        String[] projection = { MediaStore.Images.Media.DATA };
+	        Cursor cursor = managedQuery(uri, projection, null, null, null);
+	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	        cursor.moveToFirst();
+	        return cursor.getString(column_index);
+	    }
+	 
 	/** 
 	 * Dynamically adds a data entry box for a phone number to the contact_add layout.
 	 * */
