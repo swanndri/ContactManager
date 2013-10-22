@@ -13,7 +13,6 @@ import com.se206a3.contactmanager.R;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -30,6 +29,8 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 public class AddNewContactActivity extends Activity {
+	private SwipeDetector sd;
+	
 	private static final int SELECT_PICTURE = 1;
 	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
 	private List<android.view.View> emailCount = new ArrayList<android.view.View>();
@@ -42,6 +43,7 @@ public class AddNewContactActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_add);
 		img = ((ImageView)findViewById(R.id.add_profilePic));
+		sd = new SwipeDetector();
 	}
 
 	@Override
@@ -58,24 +60,25 @@ public class AddNewContactActivity extends Activity {
 		startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
 	}
 
-	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	        if (resultCode == RESULT_OK) {
-	            if (requestCode == SELECT_PICTURE) {
-	                Uri selectedImageUri = data.getData();
-	                selectedImagePath = getPath(selectedImageUri);
-	                System.out.println("Image Path : " + selectedImagePath);
-	                img.setImageURI(selectedImageUri);
-	            }
-	        }
-	    }
-	   public String getPath(Uri uri) {
-	        String[] projection = { MediaStore.Images.Media.DATA };
-	        Cursor cursor = managedQuery(uri, projection, null, null, null);
-	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	        cursor.moveToFirst();
-	        return cursor.getString(column_index);
-	    }
-	 
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == RESULT_OK) {
+			if (requestCode == SELECT_PICTURE) {
+				Uri selectedImageUri = data.getData();
+				selectedImagePath = getPath(selectedImageUri);
+				System.out.println("Image Path : " + selectedImagePath);
+				img.setImageURI(selectedImageUri);
+				img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
+			}
+		}
+	}
+	public String getPath(Uri uri) {
+		String[] projection = { MediaStore.Images.Media.DATA };
+		Cursor cursor = managedQuery(uri, projection, null, null, null);
+		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		cursor.moveToFirst();
+		return cursor.getString(column_index);
+	}
+
 	/** 
 	 * Dynamically adds a data entry box for a phone number to the contact_add layout.
 	 * */
@@ -117,6 +120,7 @@ public class AddNewContactActivity extends Activity {
 		LinearLayout phoneBoxDataEntryLayout = new LinearLayout(this);	//Create new layout to add views to, this will constrain all views needed.
 		phoneBoxDataEntryLayout.setOrientation(LinearLayout.HORIZONTAL);
 		phoneBoxDataEntryLayout.setId(1);
+		phoneBoxDataEntryLayout.setOnTouchListener(sd);
 
 		Spinner phoneBoxSpinner = new Spinner(this);
 		phoneBoxSpinner.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.0f)); //Set params as Match_parent,Match_parent, weight = 0.5
@@ -297,7 +301,7 @@ public class AddNewContactActivity extends Activity {
 		});
 		builder.setPositiveButton("Save and quit", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				// User clicked save and quit button
+				ContactListActivity.datasource.createContact(makeNewContact());
 				finish();
 
 			}
@@ -339,6 +343,8 @@ public class AddNewContactActivity extends Activity {
 		contact.setName(nm);
 
 		contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
+
+		contact.setImagePath(selectedImagePath);
 
 
 		for(int i=0;i<phnCount.size();i++){

@@ -10,25 +10,31 @@ import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.Name;
 import com.se206a3.Contacts.Contact.PhNumber;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 public class EditContactActivity extends Activity {
-
+	private static final int SELECT_PICTURE = 1;
 	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
 	private List<android.view.View> emailCount = new ArrayList<android.view.View>();
 	private List<android.view.View> addCount = new ArrayList<android.view.View>();
+	private ImageView img;
+	private String selectedImagePath;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +56,10 @@ public class EditContactActivity extends Activity {
 		((EditText)findViewById(R.id.First_Name_enter)).setText(Contact.toDisplay.getName().getFirstName());
 		((EditText)findViewById(R.id.Surname_enter)).setText(Contact.toDisplay.getName().getLastName());
 		((EditText)findViewById(R.id.Company_enter)).setText(Contact.toDisplay.getCompany());
+		if(Contact.toDisplay.getImagePath()!=null){
+			((ImageView)findViewById(R.id.add_profilePic)).setImageURI(Uri.parse(Contact.toDisplay.getImagePath()));
+			((ImageView)findViewById(R.id.add_profilePic)).setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
+		}
 
 		for (PhNumber ph:Contact.toDisplay.numbers){
 			editPhoneNumber(ph);
@@ -63,7 +73,31 @@ public class EditContactActivity extends Activity {
 		
 
 	}
+	public void addPhoto(View V){
+		Intent intent = new Intent();
+		intent.setType("image/*");
+		intent.setAction(Intent.ACTION_GET_CONTENT);
+		startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
+	}
 
+	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	        if (resultCode == RESULT_OK) {
+	            if (requestCode == SELECT_PICTURE) {
+	                Uri selectedImageUri = data.getData();
+	                selectedImagePath = getPath(selectedImageUri);
+	                System.out.println("Image Path : " + selectedImagePath);
+	                img.setImageURI(selectedImageUri);
+	                img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
+	            }
+	        }
+	    }
+	   public String getPath(Uri uri) {
+	        String[] projection = { MediaStore.Images.Media.DATA };
+	        Cursor cursor = managedQuery(uri, projection, null, null, null);
+	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+	        cursor.moveToFirst();
+	        return cursor.getString(column_index);
+	    }
 	/** 
 	 * Dynamically adds a data entry box for a phone number to the contact_add layout.
 	 * */

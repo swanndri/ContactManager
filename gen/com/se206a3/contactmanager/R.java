@@ -27,8 +27,11 @@ public final class R {
         public static final int activity_vertical_margin=0x7f050001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int ic_new=0x7f020001;
+        public static final int ic_action_add_person=0x7f020000;
+        public static final int ic_action_new=0x7f020001;
+        public static final int ic_action_new_picture=0x7f020002;
+        public static final int ic_action_person=0x7f020003;
+        public static final int ic_launcher=0x7f020004;
     }
     public static final class id {
         public static final int AddBox=0x7f090010;

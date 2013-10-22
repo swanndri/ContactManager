@@ -7,6 +7,7 @@ import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.PhNumber;
 import com.se206a3.contactmanager.R;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -62,6 +63,11 @@ public class ContactDetailActivity extends Activity {
 		LinearLayout AddressBox = (LinearLayout)findViewById(R.id.AddBox);
 
 		//Set three basic items
+		if(contact.getImagePath()!=null){
+			ProfilePic.setImageURI(Uri.parse(contact.getImagePath()));
+			ProfilePic.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
+		}
+
 		Name.setText(contact.getName().getFirstName()+" "+contact.getName().getLastName());
 		Company.setText(contact.getCompany());
 
@@ -103,7 +109,7 @@ public class ContactDetailActivity extends Activity {
 			//Add layout to super layout
 			PhoneBox.addView(phoneNumberLayout);
 		}
-		
+
 		if(contact.numbers.size()==0){
 			TextView phoneNumber = new TextView(this);
 			phoneNumber.setText("No phone numbers to display");
@@ -146,7 +152,7 @@ public class ContactDetailActivity extends Activity {
 			//Add layout to super layout
 			EmailBox.addView(emailLayout);
 		}
-		
+
 		if(contact.emails.size()==0){
 			TextView email = new TextView(this);
 			email.setText("No phone numbers to display");
@@ -179,7 +185,7 @@ public class ContactDetailActivity extends Activity {
 			TextView street1 = new TextView(this);
 			street1.setText(contact.address.get(pos).getStreet1());
 			street1.setTextSize(20);
-			
+
 			TextView street2 = new TextView(this);
 			street2.setText(contact.address.get(pos).getStreet2());
 			street2.setTextSize(20);
@@ -214,7 +220,7 @@ public class ContactDetailActivity extends Activity {
 			//Add linear layout to super layout
 			AddressBox.addView(addressLayout);
 		}
-		
+
 		if(contact.address.size()==0){
 			TextView address = new TextView(this);
 			address.setText("No phone numbers to display");

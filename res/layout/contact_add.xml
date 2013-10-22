@@ -20,8 +20,8 @@
                 android:id="@+id/add_profilePic"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="8"
-                android:src="@drawable/ic_launcher" 
+                android:layout_weight="1"
+                android:src="@drawable/ic_action_add_person" 
                 android:onClick="addPhoto"/>
 
             <LinearLayout
@@ -82,7 +82,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:src="@drawable/ic_new" 
+                        android:src="@drawable/ic_action_new" 
                         />
 
                     <LinearLayout
@@ -128,7 +128,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:src="@drawable/ic_new" />
+                        android:src="@drawable/ic_action_new" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -172,7 +172,7 @@
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_weight="2"
-                        android:src="@drawable/ic_new" />
+                        android:src="@drawable/ic_action_new" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
