@@ -6,15 +6,10 @@
     
     <TextView 
         android:id="@+id/List_item_name"
-        android:textSize="24sp"
+        android:textSize="45sp"
         android:layout_width="0px"
         android:layout_height="wrap_content"  
         android:layout_weight="2"
         android:paddingLeft="10dp"/>
-    <ImageView 
-        android:id="@+id/List_item_image"
-        android:layout_width="0px"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
     
 </LinearLayout>

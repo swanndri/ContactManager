@@ -39,7 +39,6 @@ public class ContactListActivity extends Activity {
 		sd = new SwipeDetector();
 		datasource = new ContactsDataSource(this);
 		datasource.open();
-		datasource.deleteAll();
 		//datasource.createContact(contact);
 		values = datasource.getAllContacts();
 		Collections.sort(values);
