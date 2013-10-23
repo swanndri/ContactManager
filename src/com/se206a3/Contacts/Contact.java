@@ -95,6 +95,10 @@ public class Contact implements Comparable {
 		public void setLastName(String lastName) {
 			LastName = lastName;
 		}
+		
+		public String toString(){
+			return FirstName + " " + LastName;
+		}
 	}
 
 	public static class PhNumber {

@@ -142,12 +142,13 @@ public class EditContactActivity extends Activity {
 		LinearLayout emailBoxDataEntryLayout = createEmailDataBox();	//Dynamically create a new data entry box for an email
 		List<String> SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Email_Spinner));
 
-		for(int i=0; i<((LinearLayout)emailBoxDataEntryLayout).getChildCount(); ++i) {
+		for(int i=0; i<((LinearLayout)emailBoxDataEntryLayout).getChildCount(); i++) {
 			Spinner emSpinner = (Spinner) (emailBoxDataEntryLayout).getChildAt(i);
 			emSpinner.setSelection(SpinnerOp.indexOf(em.getType()));
 			i++;
 			EditText emEditText = (EditText)(emailBoxDataEntryLayout).getChildAt(i);
 			emEditText.setText(em.getEmail());
+			i++;
 		}
 		emailBoxLayout.addView(emailBoxDataEntryLayout);	//Add data entry box to the super layout
 	}
@@ -193,6 +194,7 @@ public class EditContactActivity extends Activity {
 				EditText countryEditText = (EditText)(tf).getChildAt(j);
 				countryEditText.setText(ad.getCountry());
 			}
+			i++;
 			
 		}
 		addressBoxLayout.addView(addressBoxDataEntryLayout);	//Add data entry box to super layout

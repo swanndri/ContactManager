@@ -1,5 +1,6 @@
 package com.se206a3.contactmanager;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,10 +31,14 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class ContactListActivity extends Activity {
-	private ListView contactListV;
-	private ListAdapter la;
 	public static ContactsDataSource datasource;
 	private List<Contact> values;
+	private List<Contact> filter = new ArrayList<Contact>();
+
+	private ListView contactListV;
+	private ListAdapter la;
+	private EditText search;
+
 	private SwipeDetector sd;
 
 	@SuppressWarnings("unchecked")
@@ -48,7 +53,7 @@ public class ContactListActivity extends Activity {
 		values = datasource.getAllContacts();
 		Collections.sort(values);
 		createContactList();
-		EditText search = (EditText) findViewById(R.id.Contact_list_search);
+		search = (EditText) findViewById(R.id.Contact_list_search);
 		search.addTextChangedListener(new searchDetector());
 	}
 
@@ -71,7 +76,7 @@ public class ContactListActivity extends Activity {
 		@Override
 		public void onItemClick(AdapterView<?> parentView, View clickedView, int clickedViewPosition,
 				long id) {
-			Contact contact = values.get(clickedViewPosition);
+			Contact contact = filter.get(clickedViewPosition);
 			Contact.toDisplay = contact;
 
 			if(sd.swipeDetected()){
@@ -97,9 +102,9 @@ public class ContactListActivity extends Activity {
 					AlertDialog dialog = builder.create();
 					dialog.show();
 				}else if(sd.getSwipeType()==Action.LR){
-					Intent Edit = new Intent();
-					Edit.setClass(ContactListActivity.this,EditContactActivity.class);
-					startActivity(Edit);
+					Intent editContact = new Intent();
+					editContact.setClass(ContactListActivity.this, EditContactActivity.class);
+					startActivity(editContact);
 				}
 			}else{
 				// TODO Auto-generated method stub
@@ -125,6 +130,7 @@ public class ContactListActivity extends Activity {
 	@SuppressWarnings("unchecked")
 	public void onResume(){
 		super.onResume();
+		search.setText("");
 		values = datasource.getAllContacts();
 		Collections.sort(values);
 		la = new ContactListAdapter(this, values);
@@ -155,10 +161,7 @@ public class ContactListActivity extends Activity {
 
 			return listItemView;
 		}
-		
-		public void filter(String s){
-			
-		}
+
 
 	}
 
@@ -171,15 +174,23 @@ public class ContactListActivity extends Activity {
 			// TODO Auto-generated method stub
 		}
 
+		@SuppressWarnings("unchecked")
 		@Override
 		public void beforeTextChanged(CharSequence s, int start, int count,
 				int after) {
-			// TODO Auto-generated method stub
+
 		}
 
 		@Override
 		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			// TODO Auto-generated method stub
+			filter.clear();
+			for (Contact c: values){
+				if(c.getName().toString().toLowerCase().contains(search.getText().toString().toLowerCase())){
+					filter.add(c);
+				}
+			}
+			la = new ContactListAdapter(ContactListActivity.this, filter);
+			contactListV.setAdapter(la);		                                                                               
 		}
 	}	
 }
