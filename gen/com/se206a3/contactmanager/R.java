@@ -44,20 +44,21 @@ public final class R {
         public static final int Add_PhoneBox=0x7f090005;
         public static final int Company=0x7f09000d;
         public static final int Company_enter=0x7f090003;
-        public static final int Contact_list=0x7f090011;
+        public static final int Contact_list=0x7f090012;
+        public static final int Contact_list_search=0x7f090011;
         public static final int DataBox=0x7f090004;
         public static final int EmailBox=0x7f09000f;
         public static final int First_Name_enter=0x7f090001;
-        public static final int List_item_name=0x7f090012;
+        public static final int List_item_name=0x7f090013;
         public static final int Name=0x7f09000c;
         public static final int PhoneBox=0x7f09000e;
         public static final int Profile_pic=0x7f09000b;
         public static final int Surname_enter=0x7f090002;
-        public static final int action_Done=0x7f090013;
-        public static final int action_addNew=0x7f090016;
-        public static final int action_deleteContact=0x7f090015;
-        public static final int action_editContact=0x7f090014;
-        public static final int action_settings=0x7f090017;
+        public static final int action_Done=0x7f090014;
+        public static final int action_addNew=0x7f090017;
+        public static final int action_deleteContact=0x7f090016;
+        public static final int action_editContact=0x7f090015;
+        public static final int action_settings=0x7f090018;
         public static final int add_profilePic=0x7f090000;
     }
     public static final class layout {
@@ -79,6 +80,7 @@ public final class R {
         public static final int add_phone=0x7f060008;
         public static final int app_name=0x7f060000;
         public static final int company=0x7f060007;
+        public static final int contact_list_search_hint=0x7f06000b;
         public static final int first_name=0x7f060005;
         public static final int surname=0x7f060006;
         public static final int title_activity_add_new_contact=0x7f060003;

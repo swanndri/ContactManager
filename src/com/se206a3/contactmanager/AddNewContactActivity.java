@@ -183,9 +183,16 @@ public class AddNewContactActivity extends Activity {
 		//Simple_spinner_item = 1 line of text		
 		emailBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Email_Spinner)));
 
+
+		ImageView delete = new ImageView(this);
+		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
+		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
+		delete.setOnClickListener(new deleteClick());
+
 		//Add views to super layout
 		emailBoxDataEntryLayout.addView(emailBoxSpinner);
 		emailBoxDataEntryLayout.addView(emailBoxText);
+		emailBoxDataEntryLayout.addView(delete);
 
 		//Add views to list for easy data retrieve
 		emailCount.add(emailBoxSpinner);
@@ -258,9 +265,15 @@ public class AddNewContactActivity extends Activity {
 		//Simple_spinner_item = 1 line of text		
 		addressBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Address_Spinner)));
 
+		ImageView delete = new ImageView(this);
+		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
+		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
+		delete.setOnClickListener(new deleteAddClick());
+
 		//Add spinner and nested layout to superlayout
 		addressBoxDataEntryLayout.addView(addressBoxSpinner);
 		addressBoxDataEntryLayout.addView(addressBoxTextFields);
+		addressBoxDataEntryLayout.addView(delete);
 
 		//Add views to list for easy data retrieve
 		addCount.add(addressBoxSpinner);
@@ -452,8 +465,29 @@ public class AddNewContactActivity extends Activity {
 			l.removeAllViews();
 
 		}
+		
+	}
+	
+	class deleteAddClick implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			ImageView view = (ImageView) v;
+			LinearLayout l = (LinearLayout) view.getParent();
+
+			Spinner x = (Spinner)l.getChildAt(0);
+			phnCount.remove(x);
+			LinearLayout y = (LinearLayout)l.getChildAt(1);
+			
+			for(int i=0;i<y.getChildCount(); i++){
+				phnCount.remove(y.getChildAt(i));
+			}
+			l.removeAllViews();
+
+		}
 
 	}
 }
+
+
 
 

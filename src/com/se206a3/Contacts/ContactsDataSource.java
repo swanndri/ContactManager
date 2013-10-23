@@ -27,6 +27,8 @@ public class ContactsDataSource {
 			ContactDataBaseHelper.COLUMN_PHONENUMBERS,
 			ContactDataBaseHelper.COLUMN_EMAILS,
 			ContactDataBaseHelper.COLUMN_ADDRESSES};
+	
+	public Contact mostRecentContact;
 
 	public ContactsDataSource(Context context) {
 		dbHelper = new ContactDataBaseHelper(context);
@@ -82,6 +84,7 @@ public class ContactsDataSource {
 				null, null, null);
 		cursor.moveToFirst();
 		Contact newComment = cursorToContact(cursor);
+		mostRecentContact = newComment;
 		cursor.close();
 		return newComment;
 	}

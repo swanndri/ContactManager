@@ -13,6 +13,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,6 +48,8 @@ public class ContactListActivity extends Activity {
 		values = datasource.getAllContacts();
 		Collections.sort(values);
 		createContactList();
+		EditText search = (EditText) findViewById(R.id.Contact_list_search);
+		search.addTextChangedListener(new searchDetector());
 	}
 
 	@Override
@@ -68,27 +75,27 @@ public class ContactListActivity extends Activity {
 			Contact.toDisplay = contact;
 
 			if(sd.swipeDetected()){
-				
-				if(sd.getSwipeType()==Action.RL){
-				AlertDialog.Builder builder = new AlertDialog.Builder(ContactListActivity.this);
-				builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						// User cancelled the dialog
-					}
-				});
-				builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int id) {
-						// User clicked save and quit button
-						ContactListActivity.datasource.deleteContact(Contact.toDisplay);
-						onResume();
-					}
-				});
-				builder.setTitle("Are you sure you want to delete " + Contact.toDisplay.getName().getFirstName() +" "+ Contact.toDisplay.getName().getLastName()+ "?");
-				// Set other dialog properties
 
-				// Create the AlertDialog
-				AlertDialog dialog = builder.create();
-				dialog.show();
+				if(sd.getSwipeType()==Action.RL){
+					AlertDialog.Builder builder = new AlertDialog.Builder(ContactListActivity.this);
+					builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							// User cancelled the dialog
+						}
+					});
+					builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							// User clicked save and quit button
+							ContactListActivity.datasource.deleteContact(Contact.toDisplay);
+							onResume();
+						}
+					});
+					builder.setTitle("Are you sure you want to delete " + Contact.toDisplay.getName().getFirstName() +" "+ Contact.toDisplay.getName().getLastName()+ "?");
+					// Set other dialog properties
+
+					// Create the AlertDialog
+					AlertDialog dialog = builder.create();
+					dialog.show();
 				}else if(sd.getSwipeType()==Action.LR){
 					Intent Edit = new Intent();
 					Edit.setClass(ContactListActivity.this,EditContactActivity.class);
@@ -124,16 +131,18 @@ public class ContactListActivity extends Activity {
 		contactListV.setAdapter(la);
 	}
 
-	private class ContactListAdapter extends ArrayAdapter<Contact>{
+	private class ContactListAdapter extends ArrayAdapter<Contact> implements Filterable{
 
 		private Context context;
 		private List<Contact> contacts;
+		private List<Contact> filter;
 
 		ContactListAdapter(Context context, List<Contact> contacts){
 			super(context, android.R.layout.simple_list_item_1,contacts);
 
 			this.context = context;
 			this.contacts = contacts;
+			this.filter = contacts;
 		}
 
 		public View getView(int position, View convertView, ViewGroup Parent){
@@ -146,8 +155,33 @@ public class ContactListActivity extends Activity {
 
 			return listItemView;
 		}
+		
+		public void filter(String s){
+			
+		}
+
 	}
 
+
+	class searchDetector implements TextWatcher{
+
+
+		@Override
+		public void afterTextChanged(Editable s) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void beforeTextChanged(CharSequence s, int start, int count,
+				int after) {
+			// TODO Auto-generated method stub
+		}
+
+		@Override
+		public void onTextChanged(CharSequence s, int start, int before, int count) {
+			// TODO Auto-generated method stub
+		}
+	}	
 }
 
 

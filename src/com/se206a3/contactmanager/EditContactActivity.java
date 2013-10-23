@@ -9,6 +9,8 @@ import com.se206a3.Contacts.Contact.Address;
 import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.Name;
 import com.se206a3.Contacts.Contact.PhNumber;
+import com.se206a3.contactmanager.AddNewContactActivity.deleteAddClick;
+import com.se206a3.contactmanager.AddNewContactActivity.deleteClick;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -22,6 +24,7 @@ import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -41,7 +44,6 @@ public class EditContactActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_add);
 		addData();
-		ContactListActivity.datasource.deleteContact(Contact.toDisplay);
 	}
 
 	@Override
@@ -113,15 +115,15 @@ public class EditContactActivity extends Activity {
 
 		LinearLayout phoneBoxLayout = (LinearLayout) findViewById(R.id.Add_PhoneBox); //Get super (constraining) layout for phone numbers
 		LinearLayout phoneBoxDataEntryLayout = createPhoneDataBox();	//Dynamically create a new data entry box for a phone number
-		phoneBoxDataEntryLayout.setId(0);
 		List<String> SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Phone_Spinner));
 
-		for(int i=0; i<((LinearLayout)phoneBoxDataEntryLayout).getChildCount(); ++i) {
+		for(int i=0; i<((LinearLayout)phoneBoxDataEntryLayout).getChildCount(); i++) {
 			Spinner phnSpinner = (Spinner) (phoneBoxDataEntryLayout).getChildAt(i);
 			phnSpinner.setSelection(SpinnerOp.indexOf(ph.getType()));
 			i++;
 			EditText phnEditText = (EditText)(phoneBoxDataEntryLayout).getChildAt(i);
 			phnEditText.setText(ph.getNumber());
+			i++;
 		}
 		phoneBoxLayout.addView(phoneBoxDataEntryLayout);	//Add data entry box to the super layout
 	}
@@ -223,10 +225,16 @@ public class EditContactActivity extends Activity {
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text
 		phoneBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Phone_Spinner)));
+		
+		ImageView delete = new ImageView(this);
+		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
+		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
+		delete.setOnClickListener(new deleteClick());
 
 		//Add views to super layout
 		phoneBoxDataEntryLayout.addView(phoneBoxSpinner);
 		phoneBoxDataEntryLayout.addView(phoneBoxText);
+		phoneBoxDataEntryLayout.addView(delete);
 
 		//Add Views to list for easy data retrieve
 		phnCount.add(phoneBoxSpinner);
@@ -260,14 +268,21 @@ public class EditContactActivity extends Activity {
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text		
 		emailBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Email_Spinner)));
+		
+		ImageView delete = new ImageView(this);
+		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
+		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
+		delete.setOnClickListener(new deleteClick());
 
 		//Add views to super layout
 		emailBoxDataEntryLayout.addView(emailBoxSpinner);
 		emailBoxDataEntryLayout.addView(emailBoxText);
+		emailBoxDataEntryLayout.addView(delete);
 
 		//Add views to list for easy data retrieve
 		emailCount.add(emailBoxSpinner);
 		emailCount.add(emailBoxText);
+
 
 		//Return complete layout
 		return emailBoxDataEntryLayout;
@@ -335,10 +350,17 @@ public class EditContactActivity extends Activity {
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text		
 		addressBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Address_Spinner)));
+		
+		ImageView delete = new ImageView(this);
+		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
+		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
+		delete.setOnClickListener(new deleteAddClick());
 
 		//Add spinner and nested layout to superlayout
 		addressBoxDataEntryLayout.addView(addressBoxSpinner);
 		addressBoxDataEntryLayout.addView(addressBoxTextFields);
+		addressBoxDataEntryLayout.addView(delete);
+
 
 		//Add views to list for easy data retrieve
 		addCount.add(addressBoxSpinner);
@@ -362,8 +384,8 @@ public class EditContactActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.action_Done:
 			Contact toBeAdded = makeNewContact();	//Create new contact object
-			Contact.toDisplay = toBeAdded;
 			ContactListActivity.datasource.createContact(toBeAdded);
+			Contact.toDisplay = ContactListActivity.datasource.mostRecentContact;
 			Intent Details = new Intent();
 			Details.setClass(EditContactActivity.this,ContactDetailActivity.class);
 			startActivity(Details);
@@ -389,17 +411,24 @@ public class EditContactActivity extends Activity {
 				// User cancelled the dialog
 			}
 		});
-		builder.setPositiveButton("Save and quit", new DialogInterface.OnClickListener() {
+		builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				// User clicked save and quit button
+				Contact toBeAdded = makeNewContact();	//Create new contact object
+				ContactListActivity.datasource.createContact(toBeAdded);
+				Contact.toDisplay = ContactListActivity.datasource.mostRecentContact;
+				Intent Details = new Intent();
+				Details.setClass(EditContactActivity.this,ContactDetailActivity.class);
+				startActivity(Details);
 				finish();
 
 			}
 		});
 		builder.setNeutralButton("Dont save", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				finish();
-			}
+				Intent Details = new Intent();
+				Details.setClass(EditContactActivity.this,ContactDetailActivity.class);
+				startActivity(Details);
+				finish();			}
 		});
 		builder.setTitle("Would you like to save?");
 		// Set other dialog properties
@@ -413,65 +442,148 @@ public class EditContactActivity extends Activity {
 
 	public Contact makeNewContact(){
 		//For every edittext, get info and save
-		//Make contact
-		//Add to contacts
-		Contact contact = new Contact();
-
-		Name nm = new Name();
-		nm.setFirstName(((EditText)findViewById(R.id.First_Name_enter)).getText().toString());
-		nm.setLastName(((EditText)findViewById(R.id.Surname_enter)).getText().toString());
-		contact.setName(nm);
-
-		contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
+				//Make contact
+				//Add to contacts
+				Contact contact = new Contact();
+				ContactListActivity.datasource.deleteContact(Contact.toDisplay);
 
 
-		for(int i=0;i<phnCount.size();i++){
-			PhNumber phn = new PhNumber();
-			phn.setType(((Spinner) phnCount.get(i)).getSelectedItem().toString());
-			i++;
-			phn.setNumber(((EditText) phnCount.get(i)).getText().toString());
-			contact.numbers.add(phn);
-		}
+				Name nm = new Name();
+				String firstName =((EditText)findViewById(R.id.First_Name_enter)).getText().toString();
+				String lastName =((EditText)findViewById(R.id.Surname_enter)).getText().toString();
 
-		for(int i=0;i<emailCount.size();i++){
-			Email em = new Email();
-			em.setType(((Spinner) emailCount.get(i)).getSelectedItem().toString());
-			i++;
-			em.setEmail(((EditText) emailCount.get(i)).getText().toString());
-			contact.emails.add(em);
-		}
 
-		for(int i=0;i<addCount.size();i++){
-			Address ad = new Address();
-			ad.setType(((Spinner) addCount.get(i)).getSelectedItem().toString());
-			i++;
-			ad.setStreet1(((EditText) addCount.get(i)).getText().toString());
-			i++;
-			ad.setStreet2(((EditText) addCount.get(i)).getText().toString());
-			i++;
-			ad.setSuburb(((EditText) addCount.get(i)).getText().toString());
-			i++;
-			ad.setCity(((EditText) addCount.get(i)).getText().toString());
-			i++;
-			ad.setPostCode(((EditText) addCount.get(i)).getText().toString());
-			i++;
-			ad.setCountry(((EditText) addCount.get(i)).getText().toString());
+				if(firstName.trim().equals("")&&lastName.trim().equals("")){
+					nm.setFirstName("No");
+					nm.setLastName("Name");
+				}else{
+					nm.setFirstName(firstName);
+					nm.setLastName(lastName);
+				}
 
-			contact.address.add(ad);
-		}
-		return contact;
+				contact.setName(nm);
 
+				contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
+
+				contact.setImagePath(selectedImagePath);
+
+
+				for(int i=0;i<phnCount.size();i++){
+					PhNumber phn = new PhNumber();
+					phn.setType(((Spinner) phnCount.get(i)).getSelectedItem().toString());
+					i++;
+					if(((EditText) phnCount.get(i)).getText().toString().equals("")){
+						phn.setNumber("No number given");
+					}else{
+						phn.setNumber(((EditText) phnCount.get(i)).getText().toString());
+					}
+					contact.numbers.add(phn);
+				}
+
+				for(int i=0;i<emailCount.size();i++){
+					Email em = new Email();
+					em.setType(((Spinner) emailCount.get(i)).getSelectedItem().toString());
+					i++;
+					if(((EditText) emailCount.get(i)).getText().toString().equals("")){
+						em.setEmail("No email given");
+					}else{
+						em.setEmail(((EditText) emailCount.get(i)).getText().toString());
+					}
+					contact.emails.add(em);
+				}
+
+				for(int i=0;i<addCount.size();i++){
+					Address ad = new Address();
+					ad.setType(((Spinner) addCount.get(i)).getSelectedItem().toString());
+					i++;
+
+					if(((EditText) addCount.get(i)).getText().toString().equals("")){
+						ad.setStreet1("No street given");
+					}else{
+						ad.setStreet1(((EditText) addCount.get(i)).getText().toString());
+					}
+
+					i++;
+
+					if(((EditText) addCount.get(i)).getText().toString().equals("")){
+						ad.setStreet2("No street given");
+					}else{
+						ad.setStreet2(((EditText) addCount.get(i)).getText().toString());
+					}
+
+					i++;
+
+					if(((EditText) addCount.get(i)).getText().toString().equals("")){
+						ad.setSuburb("No suburb given");
+					}else{
+						ad.setSuburb(((EditText) addCount.get(i)).getText().toString());
+					}
+
+					i++;
+
+					if(((EditText) addCount.get(i)).getText().toString().equals("")){
+						ad.setCity("No city given");
+					}else{
+						ad.setCity(((EditText) addCount.get(i)).getText().toString());
+					}
+
+					i++;
+
+					if(((EditText) addCount.get(i)).getText().toString().equals("")){
+						ad.setPostCode("No postcode given ");
+					}else{
+						ad.setPostCode(((EditText) addCount.get(i)).getText().toString());
+
+					}
+
+					i++;
+
+					if(((EditText) addCount.get(i)).getText().toString().equals("")){
+						ad.setCountry("No country given");
+					}else{
+						ad.setCountry(((EditText) addCount.get(i)).getText().toString());
+					}
+
+					contact.address.add(ad);
+				}
+				return contact;
 
 
 	}
 
-	public static void mergeExistingContacts(Contact contact){
-		//Merge exisiting contact with new one
-		//No idea how to do this yet
+	class deleteClick implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			ImageView view = (ImageView) v;
+			LinearLayout l = (LinearLayout) view.getParent();
+
+			Spinner x = (Spinner)l.getChildAt(0);
+			phnCount.remove(x);
+			EditText y = (EditText)l.getChildAt(1);
+			phnCount.remove(y);
+			l.removeAllViews();
+
+		}
+		
 	}
-	public static void replaceExistingContacts(Contact contact){
-		//Replace exisiting contact with new one
-		//No idea how to do this yet
+	
+	class deleteAddClick implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			ImageView view = (ImageView) v;
+			LinearLayout l = (LinearLayout) view.getParent();
+
+			Spinner x = (Spinner)l.getChildAt(0);
+			phnCount.remove(x);
+			LinearLayout y = (LinearLayout)l.getChildAt(1);
+			
+			for(int i=0;i<y.getChildCount(); i++){
+				phnCount.remove(y.getChildAt(i));
+			}
+			l.removeAllViews();
+
+		}
+
 	}
 
 }
