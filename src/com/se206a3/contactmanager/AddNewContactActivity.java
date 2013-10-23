@@ -33,7 +33,6 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 
 public class AddNewContactActivity extends Activity {
-	private SwipeDetector sd;
 
 	private static final int SELECT_PICTURE = 1;
 	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
@@ -47,7 +46,6 @@ public class AddNewContactActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_add);
 		img = ((ImageView)findViewById(R.id.add_profilePic));
-		sd = new SwipeDetector();
 	}
 
 	@Override
@@ -88,10 +86,12 @@ public class AddNewContactActivity extends Activity {
 	 * */
 	public void addPhoneNumber(View V){
 		LinearLayout phoneBoxLayout = (LinearLayout) findViewById(R.id.Add_PhoneBox); //Get super (constraining) layout for phone numbers
-		LinearLayout phoneBoxDataEntryLayout = createPhoneDataBox();	//Dynamically create a new data entry box for a phone number
+		LinearLayout phoneBoxDataEntryLayout = createPhoneDataBox();//Dynamically create a new data entry box for a phone number
 		phoneBoxDataEntryLayout.setId(0);
 		phoneBoxLayout.addView(phoneBoxDataEntryLayout);	//Add data entry box to the super layout
 	}
+
+
 
 	/** 
 	 * Dynamically adds a data entry box for a email to the contact_add layout.
@@ -124,8 +124,6 @@ public class AddNewContactActivity extends Activity {
 		LinearLayout phoneBoxDataEntryLayout = new LinearLayout(this);	//Create new layout to add views to, this will constrain all views needed.
 		phoneBoxDataEntryLayout.setOrientation(LinearLayout.HORIZONTAL);
 		phoneBoxDataEntryLayout.setId(1);
-		phoneBoxDataEntryLayout.setOnTouchListener(sd);
-		phoneBoxDataEntryLayout.setOnClickListener(new ClickList());
 
 		Spinner phoneBoxSpinner = new Spinner(this);
 		phoneBoxSpinner.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.0f)); //Set params as Match_parent,Match_parent, weight = 0.5
@@ -141,9 +139,17 @@ public class AddNewContactActivity extends Activity {
 		//Simple_spinner_item = 1 line of text
 		phoneBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Phone_Spinner)));
 
+
+		ImageView delete = new ImageView(this);
+		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
+		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
+		delete.setOnClickListener(new deleteClick());
+
 		//Add views to super layout
 		phoneBoxDataEntryLayout.addView(phoneBoxSpinner);
 		phoneBoxDataEntryLayout.addView(phoneBoxText);
+		phoneBoxDataEntryLayout.addView(delete);
+
 
 		//Add Views to list for easy data retrieve
 		phnCount.add(phoneBoxSpinner);
@@ -431,40 +437,22 @@ public class AddNewContactActivity extends Activity {
 			contact.address.add(ad);
 		}
 		return contact;
-
-
-
 	}
-	class ClickList implements OnClickListener{			
-			@Override
-			public void onClick(View v) {
-				if(sd.swipeDetected()){
-					if(sd.getSwipeType()==Action.RL){
-					AlertDialog.Builder builder = new AlertDialog.Builder(AddNewContactActivity.this);
-					builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							// User cancelled the dialog
-						}
-					});
-					builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							// User clicked save and quit button
-						}
-					});
-					builder.setTitle("Are you sure you want to delete " + Contact.toDisplay.getName().getFirstName() +" "+ Contact.toDisplay.getName().getLastName()+ "?");
-					// Set other dialog properties
 
-					// Create the AlertDialog
-					AlertDialog dialog = builder.create();
-					dialog.show();
-					}else if(sd.getSwipeType()==Action.LR){
-						Intent Edit = new Intent();
-						Edit.setClass(AddNewContactActivity.this,EditContactActivity.class);
-						startActivity(Edit);
-					}
-				}else{
-				}				
-			}
+	class deleteClick implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			ImageView view = (ImageView) v;
+			LinearLayout l = (LinearLayout) view.getParent();
+
+			Spinner x = (Spinner)l.getChildAt(0);
+			phnCount.remove(x);
+			EditText y = (EditText)l.getChildAt(1);
+			phnCount.remove(y);
+			l.removeAllViews();
+
+		}
+
 	}
 }
 
