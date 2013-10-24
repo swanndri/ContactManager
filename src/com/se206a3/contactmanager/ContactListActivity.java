@@ -2,11 +2,16 @@ package com.se206a3.contactmanager;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import com.se206a3.Contacts.Contact;
 import com.se206a3.Contacts.ContactsDataSource;
 import com.se206a3.contactmanager.SwipeDetector.Action;
+import com.se206a3.sorting.firstLastNameSort;
+import com.se206a3.sorting.firstNameSort;
+import com.se206a3.sorting.lastNameSort;
+import com.se206a3.sorting.numbersSort;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -16,11 +21,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -29,6 +37,7 @@ import android.widget.Filterable;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 public class ContactListActivity extends Activity {
 	public static ContactsDataSource datasource;
@@ -51,9 +60,10 @@ public class ContactListActivity extends Activity {
 		datasource.open();
 		//datasource.createContact(contact);
 		values = datasource.getAllContacts();
-		Collections.sort(values);
+		((ArrayAdapter<Contact>) contactListV.getAdapter()).sort(new firstLastNameSort());
 		createContactList();
 		search = (EditText) findViewById(R.id.Contact_list_search);
+		search.setOnEditorActionListener(new searchDone());
 		search.addTextChangedListener(new searchDetector());
 	}
 
@@ -123,6 +133,34 @@ public class ContactListActivity extends Activity {
 			addNewContact.setClass(ContactListActivity.this, AddNewContactActivity.class);
 			startActivity(addNewContact);
 			return true;
+
+		case R.id.action_sorts:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setTitle("Choose how to sort");
+			builder.setItems(R.array.Sorting_methods, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					// The 'which' argument contains the index position
+					// of the selected item
+					Comparator<Contact> x = null;
+					switch(which){
+					case 0:
+						new firstLastNameSort();
+					case 1:
+						x = new firstNameSort();
+						break;
+					case 2:
+						x = new lastNameSort();
+						break;
+					case 3:
+						x = new numbersSort();
+						break;
+					}
+					((ArrayAdapter<Contact>) contactListV.getAdapter()).sort(x);
+				}
+			});
+			AlertDialog dialog = builder.create();
+			dialog.show();
+			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -131,9 +169,8 @@ public class ContactListActivity extends Activity {
 	public void onResume(){
 		super.onResume();
 		search.setText("");
-		((ListView)findViewById(R.id.Contact_list)).requestFocus();
 		values = datasource.getAllContacts();
-		Collections.sort(values);
+		filter = values;
 		la = new ContactListAdapter(this, values);
 		contactListV.setAdapter(la);
 	}
@@ -193,7 +230,22 @@ public class ContactListActivity extends Activity {
 			la = new ContactListAdapter(ContactListActivity.this, filter);
 			contactListV.setAdapter(la);		                                                                               
 		}
-	}	
+	}
+	class searchDone implements OnEditorActionListener{
+		public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+			if (actionId == EditorInfo.IME_ACTION_SEARCH ||
+					actionId == EditorInfo.IME_ACTION_DONE ||
+					event.getAction() == KeyEvent.ACTION_DOWN &&
+					event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+				if (!event.isShiftPressed()) {
+					// the user is done typing. 
+					System.out.println("ABC");
+					return true; // consume.
+				}                
+			}
+			return false; // pass on to other listeners. 
+		}
+	}
 }
 
 

@@ -9,7 +9,7 @@ import android.os.Parcelable;
 /**
  * A Contact object - represents one contact.
  */
-public class Contact implements Comparable {
+public class Contact{
 
 	private Long Id;
 	private Name name;
@@ -238,31 +238,6 @@ public class Contact implements Comparable {
 			this.type = type;
 		}
 
-	}
-
-
-
-
-	@Override
-	public int compareTo(Object arg0) {
-		// TODO Auto-generated method stub
-		Contact contact = (Contact)arg0;
-		int i = 0;
-		if(this.getName().getFirstName().compareTo(contact.getName().getFirstName())==0){
-			if(this.getName().getLastName().compareTo(contact.getName().getLastName())==0){
-				i = 0;
-			}else if(this.getName().getLastName().compareTo(contact.getName().getLastName())>0){
-				i = 1;
-			}else if(this.getName().getLastName().compareTo(contact.getName().getLastName())<0){
-				i = -1;
-			}
-		}else if(this.getName().getFirstName().compareTo(contact.getName().getFirstName())>0){
-			i = 1;
-
-		}else if(this.getName().getFirstName().compareTo(contact.getName().getFirstName())<0){
-			i = -1;
-		}
-		return i;
 	}
 
 

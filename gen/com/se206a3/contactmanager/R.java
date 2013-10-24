@@ -13,6 +13,7 @@ public final class R {
         public static final int Email_Spinner=0x7f040002;
         public static final int OptionsArray=0x7f040000;
         public static final int Phone_Spinner=0x7f040001;
+        public static final int Sorting_methods=0x7f040004;
     }
     public static final class attr {
     }
@@ -55,10 +56,11 @@ public final class R {
         public static final int Profile_pic=0x7f09000b;
         public static final int Surname_enter=0x7f090002;
         public static final int action_Done=0x7f090014;
-        public static final int action_addNew=0x7f090017;
+        public static final int action_addNew=0x7f090018;
         public static final int action_deleteContact=0x7f090016;
         public static final int action_editContact=0x7f090015;
-        public static final int action_settings=0x7f090018;
+        public static final int action_settings=0x7f090019;
+        public static final int action_sorts=0x7f090017;
         public static final int add_profilePic=0x7f090000;
     }
     public static final class layout {

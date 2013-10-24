@@ -14,5 +14,11 @@
          <item >Home</item><item >Work</item><item >Other</item>
      </string-array>
      <string-array name="Address_Spinner"><item >Home</item><item >Work</item><item >Other</item>
+     </string-array><string-array name="Sorting_methods">
+         <item>Default (First Name Then Last Name)</item><item >First Name</item>
+         <item >Last Name</item>
+         <item >Mobile Number</item>
+         
+         
      </string-array>
 </resources>
