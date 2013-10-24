@@ -9,12 +9,9 @@ import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.Name;
 import com.se206a3.Contacts.Contact.PhoneNumber;
 import com.se206a3.contactmanager.R;
-import com.se206a3.contactmanager.ContactListActivity.ListItemClickList;
-import com.se206a3.contactmanager.SwipeDetector.Action;
-
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
+import android.provider.MediaStore.MediaColumns;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -26,65 +23,109 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.RelativeLayout.LayoutParams;
-
+/**
+ * 
+ * @author Ben Brown
+ *
+ * The activity responsible for the addition of contacts to the database.
+ */
 public class AddNewContactActivity extends Activity {
-
-	private static final int SELECT_PICTURE = 1;
-	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
-	private List<android.view.View> emailCount = new ArrayList<android.view.View>();
-	private List<android.view.View> addCount = new ArrayList<android.view.View>();
-	private ImageView img;
-	private String selectedImagePath;
+	/**
+	 * A value that acts as a check in getting the profile picture.
+	 */
 	private int RESULT_LOAD_IMAGE = 0;
+	
+	/**
+	 * List that contains all the data entry views that are used to add phone numbers.
+	 */
+	private List<android.view.View> _phoneDataEntryViewsList = new ArrayList<android.view.View>();
+	
+	/**
+	 * List that contains all the data entry views that are used to add emails.
+	 */
+	private List<android.view.View> _emailDataEntryViewList= new ArrayList<android.view.View>();
+	
+	/**
+	 * List that contains all the data entry views that are used to add addresses.
+	 */
+	private List<android.view.View> _addressDataEntryViewList = new ArrayList<android.view.View>();
+	
+	/**
+	 * ImageView for the contacts profile picture.
+	 */
+	private ImageView _profilePicture;
+	
+	/**
+	 * String of the filepath for the profile picture.
+	 */
+	private String _selectedImagePath;
+
 
 	@Override
+	/**
+	 * Method that is run when the activity is started.
+	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.contact_add);
-		img = ((ImageView)findViewById(R.id.add_profilePic));
+		setContentView(R.layout.contact_add); // Inflate layout
+		_profilePicture = ((ImageView)findViewById(R.id.add_profilePic)); // Get the profile picture view
 	}
 
 	@Override
+	/**
+	 * Inflates the menu at the top of the screen.
+	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.contact_add, menu);
 		return true;
 	}
 
+	/**
+	 * Run on click of the profile picture view.
+	 * Allows the user to select a picture from the gallery.
+	 * @param V
+	 */
 	public void addPhoto(View V){
+		// Start gallery activity for result of picture
 		Intent i = new Intent(
 				Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 				startActivityForResult(i, RESULT_LOAD_IMAGE);
 	}
 
 	@Override
+	/**
+	 * Runs when a activity for result returns.
+	 * Ie. When a profile picture is selected.
+	 * 
+	 * Saves the file path of the selected image.
+	 */
 	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 	     super.onActivityResult(requestCode, resultCode, data);
 	      
+	     // If valid return
 	     if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-	         Uri selectedImage = data.getData();
-	         String[] filePathColumn = { MediaStore.Images.Media.DATA };
+	         
+	    	 // Get file path and save to database
+	    	 Uri selectedImage = data.getData();
+	         String[] filePathColumn = { MediaColumns.DATA };
 	 
 	         Cursor cursor = getContentResolver().query(selectedImage,
 	                 filePathColumn, null, null, null);
 	         cursor.moveToFirst();
 	 
 	         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-	         selectedImagePath = cursor.getString(columnIndex);
+	         _selectedImagePath = cursor.getString(columnIndex);
 	         cursor.close();
 	         
-	         img.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));
-             img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
-             
-	                      
-	         // String picturePath contains the path of selected Image
+	         // Set the profile picture view to display the selected picture
+	         _profilePicture.setImageBitmap(BitmapFactory.decodeFile(_selectedImagePath));
+             _profilePicture.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
 	     }
 	}
 
@@ -159,8 +200,8 @@ public class AddNewContactActivity extends Activity {
 
 
 		//Add Views to list for easy data retrieve
-		phnCount.add(phoneBoxSpinner);
-		phnCount.add(phoneBoxText);
+		_phoneDataEntryViewsList.add(phoneBoxSpinner);
+		_phoneDataEntryViewsList.add(phoneBoxText);
 
 		//Return complete layout
 		return phoneBoxDataEntryLayout;	
@@ -202,8 +243,8 @@ public class AddNewContactActivity extends Activity {
 		emailBoxDataEntryLayout.addView(delete);
 
 		//Add views to list for easy data retrieve
-		emailCount.add(emailBoxSpinner);
-		emailCount.add(emailBoxText);
+		_emailDataEntryViewList.add(emailBoxSpinner);
+		_emailDataEntryViewList.add(emailBoxText);
 
 		//Return complete layout
 		return emailBoxDataEntryLayout;
@@ -283,13 +324,13 @@ public class AddNewContactActivity extends Activity {
 		addressBoxDataEntryLayout.addView(delete);
 
 		//Add views to list for easy data retrieve
-		addCount.add(addressBoxSpinner);
-		addCount.add(addressBoxStreet1);
-		addCount.add(addressBoxStreet2);
-		addCount.add(addressBoxSuburb);
-		addCount.add(addressBoxCity);
-		addCount.add(addressBoxPostCode);
-		addCount.add(addressBoxCountry);
+		_addressDataEntryViewList.add(addressBoxSpinner);
+		_addressDataEntryViewList.add(addressBoxStreet1);
+		_addressDataEntryViewList.add(addressBoxStreet2);
+		_addressDataEntryViewList.add(addressBoxSuburb);
+		_addressDataEntryViewList.add(addressBoxCity);
+		_addressDataEntryViewList.add(addressBoxPostCode);
+		_addressDataEntryViewList.add(addressBoxCountry);
 
 		//Return superlayout
 		return addressBoxDataEntryLayout;
@@ -300,6 +341,7 @@ public class AddNewContactActivity extends Activity {
 	 * Determines which item was pressed by id of parsed item.
 	 * @param MenuItem item - the item that was clicked.
 	 * */
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_Done:
@@ -318,6 +360,7 @@ public class AddNewContactActivity extends Activity {
 	 * Content:
 	 * 			Create dialog with options to cancel, quit, save and quit.
 	 * */
+	@Override
 	public void onBackPressed(){
 
 		//If !content
@@ -326,11 +369,13 @@ public class AddNewContactActivity extends Activity {
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
 		builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				// User cancelled the dialog
 			}
 		});
 		builder.setPositiveButton("Save and quit", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				ContactListActivity.datasource.createContact(makeNewContact());
 				finish();
@@ -338,6 +383,7 @@ public class AddNewContactActivity extends Activity {
 			}
 		});
 		builder.setNeutralButton("Dont save", new DialogInterface.OnClickListener() {
+			@Override
 			public void onClick(DialogInterface dialog, int id) {
 				finish();
 			}
@@ -353,18 +399,18 @@ public class AddNewContactActivity extends Activity {
 
 
 	public Contact makeNewContact(){
-		//For every edittext, get info and save
-		//Make contact
-		//Add to contacts
+		
+		// Create new contact object
 		Contact contact = new Contact();
 		
-		contact.setImagePath(selectedImagePath);
+		// Set basic data
+		contact.setImagePath(_selectedImagePath);
 
 		Name nm = new Name();
 		String firstName =((EditText)findViewById(R.id.First_Name_enter)).getText().toString();
 		String lastName =((EditText)findViewById(R.id.Surname_enter)).getText().toString();
 
-
+		// If name is empty, set as no name
 		if(firstName.trim().equals("")&&lastName.trim().equals("")){
 			nm.setFirstName("No");
 			nm.setLastName("Name");
@@ -380,81 +426,86 @@ public class AddNewContactActivity extends Activity {
 		contact.setDateOfBirth(((EditText)findViewById(R.id.Dob_enter)).getText().toString());
 		
 
-
-		for(int i=0;i<phnCount.size();i++){
+		// For all phone number data entry views, create a new phone number object and add to contact
+		// If phonenumber = empty, set as no number give.
+		for(int i=0;i<_phoneDataEntryViewsList.size();i++){
 			PhoneNumber phn = new PhoneNumber();
-			phn.setType(((Spinner) phnCount.get(i)).getSelectedItem().toString());
+			phn.setType(((Spinner) _phoneDataEntryViewsList.get(i)).getSelectedItem().toString());
 			i++;
-			if(((EditText) phnCount.get(i)).getText().toString().equals("")){
+			if(((EditText) _phoneDataEntryViewsList.get(i)).getText().toString().equals("")){
 				phn.setNumber("No number given");
 			}else{
-				phn.setNumber(((EditText) phnCount.get(i)).getText().toString());
+				phn.setNumber(((EditText) _phoneDataEntryViewsList.get(i)).getText().toString());
 			}
 			contact.phoneNumber_list.add(phn);
 		}
 
-		for(int i=0;i<emailCount.size();i++){
+		// For all email data entry views, create a new email object and add to contact
+		// If email = empty, set as no email give.
+		for(int i=0;i<_emailDataEntryViewList.size();i++){
 			Email em = new Email();
-			em.setType(((Spinner) emailCount.get(i)).getSelectedItem().toString());
+			em.setType(((Spinner) _emailDataEntryViewList.get(i)).getSelectedItem().toString());
 			i++;
-			if(((EditText) emailCount.get(i)).getText().toString().equals("")){
+			if(((EditText) _emailDataEntryViewList.get(i)).getText().toString().equals("")){
 				em.setEmail("No email given");
 			}else{
-				em.setEmail(((EditText) emailCount.get(i)).getText().toString());
+				em.setEmail(((EditText) _emailDataEntryViewList.get(i)).getText().toString());
 			}
 			contact.email_list.add(em);
 		}
 
-		for(int i=0;i<addCount.size();i++){
+		// For all address data entry views, create a new address object and add to contact
+		// If field = empty, set as no FIELD give.
+		for(int i=0;i<_addressDataEntryViewList.size();i++){
 			Address ad = new Address();
-			ad.setType(((Spinner) addCount.get(i)).getSelectedItem().toString());
+			ad.setType(((Spinner) _addressDataEntryViewList.get(i)).getSelectedItem().toString());
 			i++;
 
-			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+			if(((EditText) _addressDataEntryViewList.get(i)).getText().toString().equals("")){
 				ad.setStreet1("No street given");
 			}else{
-				ad.setStreet1(((EditText) addCount.get(i)).getText().toString());
+				ad.setStreet1(((EditText) _addressDataEntryViewList.get(i)).getText().toString());
 			}
 
 			i++;
 
-			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+			if(((EditText) _addressDataEntryViewList.get(i)).getText().toString().equals("")){
 				ad.setStreet2("No street given");
 			}else{
-				ad.setStreet2(((EditText) addCount.get(i)).getText().toString());
+				ad.setStreet2(((EditText) _addressDataEntryViewList.get(i)).getText().toString());
 			}
 
 			i++;
 
-			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+			if(((EditText) _addressDataEntryViewList.get(i)).getText().toString().equals("")){
 				ad.setSuburb("No suburb given");
 			}else{
-				ad.setSuburb(((EditText) addCount.get(i)).getText().toString());
+				ad.setSuburb(((EditText) _addressDataEntryViewList.get(i)).getText().toString());
 			}
 
 			i++;
 
-			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+			if(((EditText) _addressDataEntryViewList.get(i)).getText().toString().equals("")){
 				ad.setCity("No city given");
 			}else{
-				ad.setCity(((EditText) addCount.get(i)).getText().toString());
+				ad.setCity(((EditText) _addressDataEntryViewList.get(i)).getText().toString());
 			}
 
 			i++;
 
-			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+			if(((EditText) _addressDataEntryViewList.get(i)).getText().toString().equals("")){
 				ad.setPostCode("No postcode given ");
 			}else{
-				ad.setPostCode(((EditText) addCount.get(i)).getText().toString());
+				ad.setPostCode(((EditText) _addressDataEntryViewList.get(i)).getText().toString());
 
 			}
 
 			i++;
 
-			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+			if(((EditText) _addressDataEntryViewList.get(i)).getText().toString().equals("")){
 				ad.setCountry("No country given");
 			}else{
-				ad.setCountry(((EditText) addCount.get(i)).getText().toString());
+				ad.setCountry(((EditText) _addressDataEntryViewList.get(i)).getText().toString());
 			}
 
 			contact.address_list.add(ad);
@@ -462,37 +513,49 @@ public class AddNewContactActivity extends Activity {
 		return contact;
 	}
 
+	/**
+	 * 
+	 * @author Ben Brown
+	 * Click listener for delete button for phonenumber/email input views.
+	 * Deletes views.
+	 */
 	class deleteClick implements OnClickListener{
 		@Override
 		public void onClick(View v) {
-			ImageView view = (ImageView) v;
+			ImageView view = (ImageView) v; // Clicked view
 			LinearLayout l = (LinearLayout) view.getParent();
 
+			// Delete input views
 			Spinner x = (Spinner)l.getChildAt(0);
-			phnCount.remove(x);
+			_phoneDataEntryViewsList.remove(x);
 			EditText y = (EditText)l.getChildAt(1);
-			phnCount.remove(y);
+			_phoneDataEntryViewsList.remove(y);
 			l.removeAllViews();
 
 		}
 		
 	}
-	
+	/**
+	 * 
+	 * @author Ben Brown
+	 * Click listener for delete button for address input views.
+	 * Deletes views.
+	 */
 	class deleteAddClick implements OnClickListener{
 		@Override
 		public void onClick(View v) {
-			ImageView view = (ImageView) v;
+			ImageView view = (ImageView) v; // Clicked view
 			LinearLayout l = (LinearLayout) view.getParent();
 
+			// Delete input views
 			Spinner x = (Spinner)l.getChildAt(0);
-			phnCount.remove(x);
+			_phoneDataEntryViewsList.remove(x);
 			LinearLayout y = (LinearLayout)l.getChildAt(1);
 			
 			for(int i=0;i<y.getChildCount(); i++){
-				phnCount.remove(y.getChildAt(i));
+				_phoneDataEntryViewsList.remove(y.getChildAt(i));
 			}
 			l.removeAllViews();
-
 		}
 
 	}
