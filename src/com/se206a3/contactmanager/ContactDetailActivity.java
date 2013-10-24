@@ -27,7 +27,7 @@ public class ContactDetailActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_detail);
-		contact = Contact.toDisplay;
+		contact = Contact.static_contactToDisplay;
 		addContent(); //Add all content of contact to contact_detail layout dynamically.
 	}
 
@@ -72,7 +72,7 @@ public class ContactDetailActivity extends Activity {
 
 		Name.setText(contact.getName().getFirstName()+" "+contact.getName().getLastName());
 		Company.setText(contact.getCompany());
-		DateOfBirth.setText(contact.getDOB());
+		DateOfBirth.setText(contact.getDateOfBirth());
 
 		//Fill super layouts
 		addPhoneNumbers(PhoneBox);
@@ -87,22 +87,22 @@ public class ContactDetailActivity extends Activity {
 	 * @param PhoneBox Layout for all phone number data boxes.
 	 */
 	public void addPhoneNumbers(LinearLayout PhoneBox){
-		for(PhNumber i : contact.numbers){	//For each phone number
-			int pos =  contact.numbers.indexOf(i);
+		for(PhNumber i : contact.phoneNumber_list){	//For each phone number
+			int pos =  contact.phoneNumber_list.indexOf(i);
 
 			LinearLayout phoneNumberLayout = new LinearLayout(this); //Create layout box for phonenumber and type
 			phoneNumberLayout.setOrientation(LinearLayout.VERTICAL);
 
 			//Define type textview
 			TextView phoneType = new TextView(this);
-			phoneType.setText(contact.numbers.get(pos).getType());
+			phoneType.setText(contact.phoneNumber_list.get(pos).getType());
 			phoneType.setTextSize(16);
 			phoneType.setTextColor(Color.parseColor("#00BFFF")); //Set light blue
 			phoneType.setPadding(0, 6, 0, 0);	//Pad 6dp to bottom
 
 			//Define number textview
 			TextView phoneNumber = new TextView(this);
-			phoneNumber.setText(contact.numbers.get(pos).getNumber());
+			phoneNumber.setText(contact.phoneNumber_list.get(pos).getNumber());
 			phoneNumber.setTextSize(24);
 
 			//Add textviews to layout
@@ -113,7 +113,7 @@ public class ContactDetailActivity extends Activity {
 			PhoneBox.addView(phoneNumberLayout);
 		}
 
-		if(contact.numbers.size()==0){
+		if(contact.phoneNumber_list.size()==0){
 			TextView phoneNumber = new TextView(this);
 			phoneNumber.setText("No phone numbers to display");
 			PhoneBox.addView(phoneNumber);
@@ -129,8 +129,8 @@ public class ContactDetailActivity extends Activity {
 	 * @param EmailBox Super layout for all emails
 	 */
 	public void addEmails(LinearLayout EmailBox){
-		for(Email i : contact.emails){	//For each email in the contact
-			int pos =  contact.emails.indexOf(i);
+		for(Email i : contact.email_list){	//For each email in the contact
+			int pos =  contact.email_list.indexOf(i);
 
 			//Create layout for text views
 			LinearLayout emailLayout = new LinearLayout(this);
@@ -138,14 +138,14 @@ public class ContactDetailActivity extends Activity {
 
 			//Define type textview
 			TextView emailType = new TextView(this);
-			emailType.setText(contact.emails.get(pos).getType());
+			emailType.setText(contact.email_list.get(pos).getType());
 			emailType.setTextSize(16);
 			emailType.setTextColor(Color.parseColor("#00BFFF"));
 			emailType.setPadding(0, 6, 0, 0);
 
 			//Define number textview
 			TextView email = new TextView(this);
-			email.setText(contact.emails.get(pos).getEmail());
+			email.setText(contact.email_list.get(pos).getEmail());
 			email.setTextSize(24);
 
 			//Add textviews to layout
@@ -156,7 +156,7 @@ public class ContactDetailActivity extends Activity {
 			EmailBox.addView(emailLayout);
 		}
 
-		if(contact.emails.size()==0){
+		if(contact.email_list.size()==0){
 			TextView email = new TextView(this);
 			email.setText("No emails to display");
 			EmailBox.addView(email);
@@ -172,42 +172,42 @@ public class ContactDetailActivity extends Activity {
 	 * @param AddressBox
 	 */
 	public void addAddress(LinearLayout AddressBox){
-		for(Address i : contact.address){
-			int pos =  contact.address.indexOf(i);
+		for(Address i : contact.address_list){
+			int pos =  contact.address_list.indexOf(i);
 
 			LinearLayout addressLayout = new LinearLayout(this);
 			addressLayout.setOrientation(LinearLayout.VERTICAL);
 
 			//Create relevant text views
 			TextView addressType = new TextView(this);
-			addressType.setText(contact.address.get(pos).getType());
+			addressType.setText(contact.address_list.get(pos).getType());
 			addressType.setTextSize(16);
 			addressType.setTextColor(Color.parseColor("#00BFFF"));
 			addressType.setPadding(0, 6, 0, 0);
 
 			TextView street1 = new TextView(this);
-			street1.setText(contact.address.get(pos).getStreet1());
+			street1.setText(contact.address_list.get(pos).getStreet1());
 			street1.setTextSize(20);
 
 			TextView street2 = new TextView(this);
-			street2.setText(contact.address.get(pos).getStreet2());
+			street2.setText(contact.address_list.get(pos).getStreet2());
 			street2.setTextSize(20);
 
 			TextView suburb = new TextView(this);
-			suburb.setText(contact.address.get(pos).getSuburb());
+			suburb.setText(contact.address_list.get(pos).getSuburb());
 			suburb.setTextSize(20);
 
 			TextView city = new TextView(this);
-			city.setText(contact.address.get(pos).getCity());
+			city.setText(contact.address_list.get(pos).getCity());
 			city.setTextSize(20);
 
 			TextView postCode = new TextView(this);
-			postCode.setText(contact.address.get(pos).getPostCode());
+			postCode.setText(contact.address_list.get(pos).getPostCode());
 			postCode.setTextSize(20);
 
 
 			TextView country = new TextView(this);
-			country.setText(contact.address.get(pos).getCountry());
+			country.setText(contact.address_list.get(pos).getCountry());
 			country.setTextSize(20);
 
 
@@ -224,7 +224,7 @@ public class ContactDetailActivity extends Activity {
 			AddressBox.addView(addressLayout);
 		}
 
-		if(contact.address.size()==0){
+		if(contact.address_list.size()==0){
 			TextView address = new TextView(this);
 			address.setText("No addresses to display");
 			AddressBox.addView(address);
@@ -268,11 +268,11 @@ public class ContactDetailActivity extends Activity {
 			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					// User clicked save and quit button
-					ContactListActivity.datasource.deleteContact(Contact.toDisplay);
+					ContactListActivity.datasource.deleteContact(Contact.static_contactToDisplay);
 					finish();
 				}
 			});
-			builder.setTitle("Are you sure you want to delete " + Contact.toDisplay.getName().getFirstName() +" "+ Contact.toDisplay.getName().getLastName()+ "?");
+			builder.setTitle("Are you sure you want to delete " + Contact.static_contactToDisplay.getName().getFirstName() +" "+ Contact.static_contactToDisplay.getName().getLastName()+ "?");
 			// Set other dialog properties
 
 			// Create the AlertDialog

@@ -3,111 +3,103 @@ package com.se206a3.Contacts;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
 /**
  * A Contact object - represents one contact.
  */
-public class Contact{
+public class Contact {
 
-	private Long Id;
-	private Name name;
-	private String company;
-	private String imagePath;
-	private String DOB;
-	
-	public List<PhNumber> numbers = new ArrayList<PhNumber>();
-	public List<Email> emails = new ArrayList<Email>();
-	public List<Address> address = new ArrayList<Address>();
-	public static Contact toDisplay;
+	public static Contact static_contactToDisplay;
 
-	public Contact(){}
+	private Long _id;
+	private Name _name;
+	private String _company;
+	private String _imagePath;
+	private String _dateOfBirth;
 
+	public List<PhNumber> phoneNumber_list = new ArrayList<PhNumber>();
+	public List<Email> email_list = new ArrayList<Email>();
+	public List<Address> address_list = new ArrayList<Address>();
 
-	public Contact(Name name, String company, String imagePath, String dob, List<PhNumber> numbers, List<Email> emails, List<Address> address) {
+	public Contact() {
+	}
+
+	public Contact(Name name, String company, String imagePath, String dob,
+			List<PhNumber> numbers, List<Email> emails, List<Address> address) {
+
 		this.setName(name);
 		this.setCompany(company);
 		this.setImagePath(imagePath);
-		this.DOB = dob;
-		
-		this.numbers = numbers;
-		this.emails = emails;
-		this.address = address;
-	}
+		this.setDateOfBirth(dob);
 
+		this.phoneNumber_list = numbers;
+		this.email_list = emails;
+		this.address_list = address;
+	}
 
 	public Long getId() {
-		return Id;
+		return _id;
 	}
-
 
 	public void setId(Long id) {
-		Id = id;
+		_id = id;
 	}
-
 
 	public Name getName() {
-		return name;
+		return _name;
 	}
-
 
 	public void setName(Name name) {
-		this.name = name;
+		this._name = name;
 	}
-
 
 	public String getCompany() {
-		return company;
+		return _company;
 	}
-
 
 	public void setCompany(String company) {
-		this.company = company;
+		this._company = company;
 	}
 
-
-
 	public static class Name {
-		private String FirstName;
-		private String LastName;
+		private String _firstName;
+		private String _lastName;
 
-		public Name(){}
-		public Name(String fName, String lName){
+		public Name() {
+		}
+
+		public Name(String fName, String lName) {
 			this.setFirstName(fName);
 			this.setLastName(lName);
 		}
 
-
 		public String getFirstName() {
-			return FirstName;
+			return _firstName;
 		}
-
 
 		public void setFirstName(String firstName) {
-			FirstName = firstName;
+			_firstName = firstName;
 		}
-
 
 		public String getLastName() {
-			return LastName;
+			return _lastName;
 		}
-
 
 		public void setLastName(String lastName) {
-			LastName = lastName;
+			_lastName = lastName;
 		}
-		
-		public String toString(){
-			return FirstName + " " + LastName;
+
+		@Override
+		public String toString() {
+			return _firstName + " " + _lastName;
 		}
 	}
 
 	public static class PhNumber {
-		private String type;
-		private String number;
+		private String _type;
+		private String _number;
 
-		public PhNumber(){}
+		public PhNumber() {
+		}
 
 		public PhNumber(String type, String number) {
 			this.setType(type);
@@ -115,28 +107,28 @@ public class Contact{
 		}
 
 		public String getType() {
-			return type;
+			return _type;
 		}
 
 		public void setType(String type) {
-			this.type = type;
+			this._type = type;
 		}
 
 		public String getNumber() {
-			return number;
+			return _number;
 		}
 
 		public void setNumber(String number) {
-			this.number = number;
+			this._number = number;
 		}
 	}
 
-
 	public static class Email {
-		private String type;
-		private String email;
+		private String _type;
+		private String _email;
 
-		public Email(){}
+		public Email() {
+		}
 
 		public Email(String type, String email) {
 			this.setType(type);
@@ -144,37 +136,37 @@ public class Contact{
 		}
 
 		public String getType() {
-			return type;
+			return _type;
 		}
 
 		public void setType(String type) {
-			this.type = type;
+			this._type = type;
 		}
 
 		public String getEmail() {
-			return email;
+			return _email;
 		}
 
 		public void setEmail(String email) {
-			this.email = email;
+			this._email = email;
 		}
 
-
-
-
 	}
+
 	public static class Address {
-		private String type;
-		private String street1;
-		private String street2;
-		private String suburb;
-		private String city;
-		private String postCode;
-		private String country;
+		private String _type;
+		private String _street1;
+		private String _street2;
+		private String _suburb;
+		private String _city;
+		private String _postCode;
+		private String _country;
 
-		public Address(){}
+		public Address() {
+		}
 
-		public Address(String type,String street1, String street2,String suburb,String city, String postCode, String country){
+		public Address(String type, String street1, String street2,
+				String suburb, String city, String postCode, String country) {
 			this.setType(type);
 			this.setStreet1(street1);
 			this.setStreet2(street2);
@@ -185,82 +177,76 @@ public class Contact{
 		}
 
 		public String getStreet1() {
-			return street1;
+			return _street1;
 		}
 
 		public void setStreet1(String street1) {
-			this.street1 = street1;
+			this._street1 = street1;
 		}
 
 		public String getStreet2() {
-			return street2;
+			return _street2;
 		}
 
 		public void setStreet2(String street2) {
-			this.street2 = street2;
+			this._street2 = street2;
 		}
 
 		public String getSuburb() {
-			return suburb;
+			return _suburb;
 		}
 
 		public void setSuburb(String suburb) {
-			this.suburb = suburb;
+			this._suburb = suburb;
 		}
 
 		public String getCity() {
-			return city;
+			return _city;
 		}
 
 		public void setCity(String city) {
-			this.city = city;
+			this._city = city;
 		}
 
 		public String getPostCode() {
-			return postCode;
+			return _postCode;
 		}
 
 		public void setPostCode(String postCode) {
-			this.postCode = postCode;
+			this._postCode = postCode;
 		}
 
 		public String getCountry() {
-			return country;
+			return _country;
 		}
 
 		public void setCountry(String country) {
-			this.country = country;
+			this._country = country;
 		}
 
 		public String getType() {
-			return type;
+			return _type;
 		}
 
 		public void setType(String type) {
-			this.type = type;
+			this._type = type;
 		}
 
 	}
 
-
 	public String getImagePath() {
-		return imagePath;
+		return _imagePath;
 	}
-
 
 	public void setImagePath(String selectedImagePath) {
-		this.imagePath = selectedImagePath;
+		this._imagePath = selectedImagePath;
 	}
 
-
-	public String getDOB() {
-		return DOB;
+	public String getDateOfBirth() {
+		return _dateOfBirth;
 	}
 
-
-	public void setDOB(String dOB) {
-		DOB = dOB;
+	public void setDateOfBirth(String dateOfBirth) {
+		_dateOfBirth = dateOfBirth;
 	}
 }
-
-

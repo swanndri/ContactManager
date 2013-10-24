@@ -60,26 +60,26 @@ public class EditContactActivity extends Activity {
 
 	public void addData(){
 		
-		((EditText)findViewById(R.id.First_Name_enter)).setText(Contact.toDisplay.getName().getFirstName());
-		((EditText)findViewById(R.id.Surname_enter)).setText(Contact.toDisplay.getName().getLastName());
-		((EditText)findViewById(R.id.Company_enter)).setText(Contact.toDisplay.getCompany());
-		((EditText)findViewById(R.id.Dob_enter)).setText(Contact.toDisplay.getDOB());
+		((EditText)findViewById(R.id.First_Name_enter)).setText(Contact.static_contactToDisplay.getName().getFirstName());
+		((EditText)findViewById(R.id.Surname_enter)).setText(Contact.static_contactToDisplay.getName().getLastName());
+		((EditText)findViewById(R.id.Company_enter)).setText(Contact.static_contactToDisplay.getCompany());
+		((EditText)findViewById(R.id.Dob_enter)).setText(Contact.static_contactToDisplay.getDateOfBirth());
 		
 		
 		img = (ImageView)findViewById(R.id.add_profilePic);
-		selectedImagePath = Contact.toDisplay.getImagePath();
-		if(Contact.toDisplay.getImagePath()!=null){
+		selectedImagePath = Contact.static_contactToDisplay.getImagePath();
+		if(Contact.static_contactToDisplay.getImagePath()!=null){
 			img.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));
             img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
 		}
 
-		for (PhNumber ph:Contact.toDisplay.numbers){
+		for (PhNumber ph:Contact.static_contactToDisplay.phoneNumber_list){
 			editPhoneNumber(ph);
 		}
-		for (Email em:Contact.toDisplay.emails){
+		for (Email em:Contact.static_contactToDisplay.email_list){
 			editEmail(em);
 		}
-		for(Address ad:Contact.toDisplay.address){
+		for(Address ad:Contact.static_contactToDisplay.address_list){
 			editAdd(ad);
 		}
 
@@ -402,7 +402,7 @@ public class EditContactActivity extends Activity {
 		case R.id.action_Done:
 			Contact toBeAdded = makeNewContact();	//Create new contact object
 			ContactListActivity.datasource.createContact(toBeAdded);
-			Contact.toDisplay = ContactListActivity.datasource.mostRecentContact;
+			Contact.static_contactToDisplay = ContactListActivity.datasource.mostRecentContact;
 			
 			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -436,7 +436,7 @@ public class EditContactActivity extends Activity {
 			public void onClick(DialogInterface dialog, int id) {
 				Contact toBeAdded = makeNewContact();	//Create new contact object
 				ContactListActivity.datasource.createContact(toBeAdded);
-				Contact.toDisplay = ContactListActivity.datasource.mostRecentContact;
+				Contact.static_contactToDisplay = ContactListActivity.datasource.mostRecentContact;
 				Intent Details = new Intent();
 				Details.setClass(EditContactActivity.this,ContactDetailActivity.class);
 				startActivity(Details);
@@ -466,7 +466,7 @@ public class EditContactActivity extends Activity {
 		//Make contact
 		//Add to contacts
 		Contact contact = new Contact();
-		ContactListActivity.datasource.deleteContact(Contact.toDisplay);
+		ContactListActivity.datasource.deleteContact(Contact.static_contactToDisplay);
 
 
 		Name nm = new Name();
@@ -485,7 +485,7 @@ public class EditContactActivity extends Activity {
 		contact.setName(nm);
 
 		contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
-		contact.setDOB(((EditText)findViewById(R.id.Dob_enter)).getText().toString());
+		contact.setDateOfBirth(((EditText)findViewById(R.id.Dob_enter)).getText().toString());
 
 		contact.setImagePath(selectedImagePath);
 
@@ -499,7 +499,7 @@ public class EditContactActivity extends Activity {
 			}else{
 				phn.setNumber(((EditText) phnCount.get(i)).getText().toString());
 			}
-			contact.numbers.add(phn);
+			contact.phoneNumber_list.add(phn);
 		}
 
 		for(int i=0;i<emailCount.size();i++){
@@ -511,7 +511,7 @@ public class EditContactActivity extends Activity {
 			}else{
 				em.setEmail(((EditText) emailCount.get(i)).getText().toString());
 			}
-			contact.emails.add(em);
+			contact.email_list.add(em);
 		}
 
 		for(int i=0;i<addCount.size();i++){
@@ -566,7 +566,7 @@ public class EditContactActivity extends Activity {
 				ad.setCountry(((EditText) addCount.get(i)).getText().toString());
 			}
 
-			contact.address.add(ad);
+			contact.address_list.add(ad);
 		}
 		return contact;
 

@@ -94,7 +94,7 @@ public class ContactListActivity extends Activity {
 		public void onItemClick(AdapterView<?> parentView, View clickedView, int clickedViewPosition,
 				long id) {
 			Contact contact = filter.get(clickedViewPosition);
-			Contact.toDisplay = contact;
+			Contact.static_contactToDisplay = contact;
 
 			if(sd.swipeDetected()){
 
@@ -108,11 +108,11 @@ public class ContactListActivity extends Activity {
 					builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							// User clicked save and quit button
-							ContactListActivity.datasource.deleteContact(Contact.toDisplay);
+							ContactListActivity.datasource.deleteContact(Contact.static_contactToDisplay);
 							onResume();
 						}
 					});
-					builder.setTitle("Are you sure you want to delete " + Contact.toDisplay.getName().getFirstName() +" "+ Contact.toDisplay.getName().getLastName()+ "?");
+					builder.setTitle("Are you sure you want to delete " + Contact.static_contactToDisplay.getName().getFirstName() +" "+ Contact.static_contactToDisplay.getName().getLastName()+ "?");
 					// Set other dialog properties
 
 					// Create the AlertDialog

@@ -49,25 +49,25 @@ public class ContactsDataSource {
 		values.put(ContactDataBaseHelper.COLUMN_LASTNAME, contact.getName().getLastName());
 		values.put(ContactDataBaseHelper.COLUMN_COMPANY, contact.getCompany());
 		values.put(ContactDataBaseHelper.COLUMN_IMAGE, contact.getImagePath());
-		values.put(ContactDataBaseHelper.COLUMN_DOB,contact.getDOB());
+		values.put(ContactDataBaseHelper.COLUMN_DOB,contact.getDateOfBirth());
 
 		StringBuilder PhoneNumbers_String = new StringBuilder();
 		StringBuilder Emails_String = new StringBuilder();
 		StringBuilder Address_String = new StringBuilder();
 
-		for (PhNumber number: contact.numbers){
+		for (PhNumber number: contact.phoneNumber_list){
 			PhoneNumbers_String.append(number.getType()+","+number.getNumber()+"|");
 		}
 		values.put(ContactDataBaseHelper.COLUMN_PHONENUMBERS,PhoneNumbers_String.toString());
 
 
-		for (Email email: contact.emails){
+		for (Email email: contact.email_list){
 			Emails_String.append(email.getType()+","+email.getEmail()+"|");
 		}
 		values.put(ContactDataBaseHelper.COLUMN_EMAILS, Emails_String.toString());
 
 
-		for (Address address: contact.address){
+		for (Address address: contact.address_list){
 
 			Address_String.append(address.getType()
 					+ "," + address.getStreet1()
@@ -123,7 +123,7 @@ public class ContactsDataSource {
 		contact.setName(new Name(cursor.getString(1),cursor.getString(2))); //Set name with Name object
 		contact.setCompany(cursor.getString(3)); //Set company
 		contact.setImagePath(cursor.getString(4));
-		contact.setDOB(cursor.getString(5));
+		contact.setDateOfBirth(cursor.getString(5));
 
 		String phnNumbers = cursor.getString(6); //Get string of phnNumbers
 		System.out.println(phnNumbers);
@@ -131,7 +131,7 @@ public class ContactsDataSource {
 			String[] indvPhnNumbers = phnNumbers.split("\\|"); 
 			for(String ph: indvPhnNumbers){
 				String[] phs = ph.split(",");
-				contact.numbers.add(new PhNumber(phs[0],phs[1]));
+				contact.phoneNumber_list.add(new PhNumber(phs[0],phs[1]));
 			}
 		}
 
@@ -140,7 +140,7 @@ public class ContactsDataSource {
 			String[] indvEmails = emails.split("\\|");
 			for (String em: indvEmails){
 				String[] ems = em.split(",");
-				contact.emails.add(new Email(ems[0],ems[1]));
+				contact.email_list.add(new Email(ems[0],ems[1]));
 			}
 		}
 
@@ -149,7 +149,7 @@ public class ContactsDataSource {
 			String[] indvAddress = address.split("\\|");
 			for (String ad: indvAddress){
 				String[] ads = ad.split(",");
-				contact.address.add(new Address(ads[0],
+				contact.address_list.add(new Address(ads[0],
 						ads[1],
 						ads[2],
 						ads[3],

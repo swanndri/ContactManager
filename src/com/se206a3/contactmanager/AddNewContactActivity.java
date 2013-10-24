@@ -377,7 +377,7 @@ public class AddNewContactActivity extends Activity {
 
 		contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
 
-		contact.setDOB(((EditText)findViewById(R.id.Dob_enter)).getText().toString());
+		contact.setDateOfBirth(((EditText)findViewById(R.id.Dob_enter)).getText().toString());
 		
 
 
@@ -390,7 +390,7 @@ public class AddNewContactActivity extends Activity {
 			}else{
 				phn.setNumber(((EditText) phnCount.get(i)).getText().toString());
 			}
-			contact.numbers.add(phn);
+			contact.phoneNumber_list.add(phn);
 		}
 
 		for(int i=0;i<emailCount.size();i++){
@@ -402,7 +402,7 @@ public class AddNewContactActivity extends Activity {
 			}else{
 				em.setEmail(((EditText) emailCount.get(i)).getText().toString());
 			}
-			contact.emails.add(em);
+			contact.email_list.add(em);
 		}
 
 		for(int i=0;i<addCount.size();i++){
@@ -457,7 +457,7 @@ public class AddNewContactActivity extends Activity {
 				ad.setCountry(((EditText) addCount.get(i)).getText().toString());
 			}
 
-			contact.address.add(ad);
+			contact.address_list.add(ad);
 		}
 		return contact;
 	}

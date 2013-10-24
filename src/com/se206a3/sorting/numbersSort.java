@@ -15,13 +15,13 @@ public class numbersSort implements Comparator<Contact>{
 		int result = 0;
 
 
-		for(PhNumber x : c1.numbers){
+		for(PhNumber x : c1.phoneNumber_list){
 			if(x.getType()=="Mobile"){
 				c1P = x;
 			}
 		}
 
-		for(PhNumber x : c2.numbers){
+		for(PhNumber x : c2.phoneNumber_list){
 			if(x.getType()=="Mobile"){
 				c2P = x;
 			}
