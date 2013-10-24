@@ -99,12 +99,15 @@ public class ContactListActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_list); // Inflate superview
-
+		
+		// Create swipe detector
+		listItemSwipeDetector = new SwipeDetector();
+		
 		//Open or create database
 		datasource = new ContactsDataSource(this);
 		datasource.open();
 		contactList = datasource.getAllContacts(); // Populate contactList
-
+		
 		createContactList(); // Create the listview
 
 		//Create the search box
@@ -152,7 +155,7 @@ public class ContactListActivity extends Activity {
 
 			if(listItemSwipeDetector.swipeDetected()){
 
-				if(listItemSwipeDetector.getSwipeType()==Action.RL){ // If swipe is right to left
+				if(listItemSwipeDetector.getAction()==Action.RL){ // If swipe is right to left
 					AlertDialog.Builder builder = new AlertDialog.Builder(ContactListActivity.this); // Create dialog asking user if they would like to delete the contact
 					builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
@@ -173,7 +176,7 @@ public class ContactListActivity extends Activity {
 					AlertDialog dialog = builder.create();
 					dialog.show();
 
-				}else if(listItemSwipeDetector.getSwipeType()==Action.LR){ // If swipe is left to right
+				}else if(listItemSwipeDetector.getAction()==Action.LR){ // If swipe is left to right
 					// Start new edit activity
 					Intent editContact = new Intent();
 					editContact.setClass(ContactListActivity.this, EditContactActivity.class);
