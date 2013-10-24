@@ -163,6 +163,7 @@ public class ContactListActivity extends Activity {
 						break;
 					}
 					((ArrayAdapter<Contact>) contactListV.getAdapter()).sort(sortMethod);
+					Collections.sort(filter, sortMethod);
 				}
 			});
 			AlertDialog dialog = builder.create();
@@ -182,6 +183,7 @@ public class ContactListActivity extends Activity {
 		contactListV.setAdapter(la);
 
 		((ArrayAdapter<Contact>) contactListV.getAdapter()).sort(sortMethod);
+		Collections.sort(filter, sortMethod);
 	}
 
 	private class ContactListAdapter extends ArrayAdapter<Contact> implements Filterable{

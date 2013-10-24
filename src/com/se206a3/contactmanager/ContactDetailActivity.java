@@ -4,7 +4,7 @@ package com.se206a3.contactmanager;
 import com.se206a3.Contacts.Contact;
 import com.se206a3.Contacts.Contact.Address;
 import com.se206a3.Contacts.Contact.Email;
-import com.se206a3.Contacts.Contact.PhNumber;
+import com.se206a3.Contacts.Contact.PhoneNumber;
 import com.se206a3.contactmanager.R;
 
 import android.net.Uri;
@@ -87,7 +87,7 @@ public class ContactDetailActivity extends Activity {
 	 * @param PhoneBox Layout for all phone number data boxes.
 	 */
 	public void addPhoneNumbers(LinearLayout PhoneBox){
-		for(PhNumber i : contact.phoneNumber_list){	//For each phone number
+		for(PhoneNumber i : contact.phoneNumber_list){	//For each phone number
 			int pos =  contact.phoneNumber_list.indexOf(i);
 
 			LinearLayout phoneNumberLayout = new LinearLayout(this); //Create layout box for phonenumber and type

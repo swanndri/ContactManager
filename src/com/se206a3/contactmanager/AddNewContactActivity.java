@@ -7,7 +7,7 @@ import com.se206a3.Contacts.Contact;
 import com.se206a3.Contacts.Contact.Address;
 import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.Name;
-import com.se206a3.Contacts.Contact.PhNumber;
+import com.se206a3.Contacts.Contact.PhoneNumber;
 import com.se206a3.contactmanager.R;
 import com.se206a3.contactmanager.ContactListActivity.ListItemClickList;
 import com.se206a3.contactmanager.SwipeDetector.Action;
@@ -382,7 +382,7 @@ public class AddNewContactActivity extends Activity {
 
 
 		for(int i=0;i<phnCount.size();i++){
-			PhNumber phn = new PhNumber();
+			PhoneNumber phn = new PhoneNumber();
 			phn.setType(((Spinner) phnCount.get(i)).getSelectedItem().toString());
 			i++;
 			if(((EditText) phnCount.get(i)).getText().toString().equals("")){

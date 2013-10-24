@@ -5,15 +5,18 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/** 
+ * The database helper object.
+ */
 public class ContactDataBaseHelper extends SQLiteOpenHelper {
 
   public static final String TABLE_CONTACTS = "contacts";
-  public static final String COLUMN_ID = "_id";
+  public static final String COLUMN_ID = "id";
   public static final String COLUMN_FIRSTNAME = "first_name";
   public static final String COLUMN_LASTNAME = "last_name";
   public static final String COLUMN_COMPANY = "company";
   public static final String COLUMN_IMAGE = "image_path";
-  public static final String COLUMN_DOB = "date_of_birth";
+  public static final String COLUMN_DATEOFBIRTH = "date_of_birth";
   public static final String COLUMN_PHONENUMBERS = "phone_numbers";
   public static final String COLUMN_EMAILS = "emails";
   public static final String COLUMN_ADDRESSES = "addesses";
@@ -30,7 +33,7 @@ public class ContactDataBaseHelper extends SQLiteOpenHelper {
       + COLUMN_LASTNAME + " TEXT, " 
       + COLUMN_COMPANY + " TEXT, "
       + COLUMN_IMAGE + " TEXT, "
-      + COLUMN_DOB + " TEXT,"
+      + COLUMN_DATEOFBIRTH + " TEXT,"
       + COLUMN_PHONENUMBERS + " TEXT, "
       + COLUMN_EMAILS + " TEXT, "
       + COLUMN_ADDRESSES + " TEXT "

@@ -8,7 +8,7 @@ import com.se206a3.Contacts.Contact;
 import com.se206a3.Contacts.Contact.Address;
 import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.Name;
-import com.se206a3.Contacts.Contact.PhNumber;
+import com.se206a3.Contacts.Contact.PhoneNumber;
 import com.se206a3.contactmanager.AddNewContactActivity.deleteAddClick;
 import com.se206a3.contactmanager.AddNewContactActivity.deleteClick;
 
@@ -73,7 +73,7 @@ public class EditContactActivity extends Activity {
             img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
 		}
 
-		for (PhNumber ph:Contact.static_contactToDisplay.phoneNumber_list){
+		for (PhoneNumber ph:Contact.static_contactToDisplay.phoneNumber_list){
 			editPhoneNumber(ph);
 		}
 		for (Email em:Contact.static_contactToDisplay.email_list){
@@ -126,7 +126,7 @@ public class EditContactActivity extends Activity {
 		phoneBoxLayout.addView(phoneBoxDataEntryLayout);	//Add data entry box to the super layout
 	}
 
-	public void editPhoneNumber(PhNumber ph){
+	public void editPhoneNumber(PhoneNumber ph){
 
 		LinearLayout phoneBoxLayout = (LinearLayout) findViewById(R.id.Add_PhoneBox); //Get super (constraining) layout for phone numbers
 		LinearLayout phoneBoxDataEntryLayout = createPhoneDataBox();	//Dynamically create a new data entry box for a phone number
@@ -491,7 +491,7 @@ public class EditContactActivity extends Activity {
 
 
 		for(int i=0;i<phnCount.size();i++){
-			PhNumber phn = new PhNumber();
+			PhoneNumber phn = new PhoneNumber();
 			phn.setType(((Spinner) phnCount.get(i)).getSelectedItem().toString());
 			i++;
 			if(((EditText) phnCount.get(i)).getText().toString().equals("")){
