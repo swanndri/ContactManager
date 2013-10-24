@@ -4,17 +4,23 @@ import java.util.Comparator;
 
 import com.se206a3.Contacts.Contact;
 
+/**  
+ * Class for sorting by first name then last name.
+ */
 public class firstLastNameSort implements Comparator<Contact> {
 
-	// TODO Auto-generated method stub
-
-	@Override
-	public int compare(Contact c1, Contact c2) {
+	/**
+	 * Method to compare two @Contact objects, for the sorting method.
+	 * @param contact1 - Contact 1
+	 * @param contact2 - Contact 2
+	 * @return result2 - 0 if equal, - if contact1<contact2, + if contact1>contact2
+	 */
+	public int compare(Contact contact1, Contact contact2) {
 		// TODO Auto-generated method stub
-		int result = String.CASE_INSENSITIVE_ORDER.compare(c1.getName().getFirstName(), c2.getName().getFirstName());
-
-		if(result==0){
-			int result2 = String.CASE_INSENSITIVE_ORDER.compare(c1.getName().getLastName(), c2.getName().getLastName());
+		int result = String.CASE_INSENSITIVE_ORDER.compare(contact1.getName().getFirstName(), contact2.getName().getFirstName()); // Compare the first names
+		
+		if(result==0){ // If names are the same
+			int result2 = String.CASE_INSENSITIVE_ORDER.compare(contact1.getName().getLastName(), contact2.getName().getLastName()); // Compare surnames
 			return result2;
 		}else{
 			return result;
