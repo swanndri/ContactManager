@@ -6,6 +6,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import com.se206a3.Contacts.Contact;
+import com.se206a3.Contacts.Contact.Name;
 import com.se206a3.Contacts.ContactsDataSource;
 import com.se206a3.contactmanager.SwipeDetector.Action;
 import com.se206a3.sorting.firstLastNameSort;
@@ -41,6 +42,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 public class ContactListActivity extends Activity {
 	public static ContactsDataSource datasource;
+	private static Comparator<Contact> sortMethod = new firstLastNameSort();
 	private List<Contact> values;
 	private List<Contact> filter = new ArrayList<Contact>();
 
@@ -58,13 +60,19 @@ public class ContactListActivity extends Activity {
 		sd = new SwipeDetector();
 		datasource = new ContactsDataSource(this);
 		datasource.open();
-		//datasource.createContact(contact);
 		values = datasource.getAllContacts();
-		((ArrayAdapter<Contact>) contactListV.getAdapter()).sort(new firstLastNameSort());
 		createContactList();
 		search = (EditText) findViewById(R.id.Contact_list_search);
-		search.setOnEditorActionListener(new searchDone());
+		//		search.setOnEditorActionListener(new searchDone());
 		search.addTextChangedListener(new searchDetector());
+		Comparator<Contact> y = new lastNameSort();
+		Contact a = new Contact();
+		Contact b = new Contact();
+		
+		a.setName(new Name("","zed"));
+		b.setName(new Name("","x"));
+		System.out.println(y.compare(a, b));
+		
 	}
 
 	@Override
@@ -78,7 +86,6 @@ public class ContactListActivity extends Activity {
 		contactListV = (ListView)findViewById(R.id.Contact_list);
 		contactListV.setOnTouchListener(sd);
 		contactListV.setOnItemClickListener(new ListItemClickList());
-
 	}
 
 	class ListItemClickList implements AdapterView.OnItemClickListener{
@@ -144,18 +151,18 @@ public class ContactListActivity extends Activity {
 					Comparator<Contact> x = null;
 					switch(which){
 					case 0:
-						new firstLastNameSort();
+						sortMethod = new firstLastNameSort();
 					case 1:
-						x = new firstNameSort();
+						sortMethod = new firstNameSort();
 						break;
 					case 2:
-						x = new lastNameSort();
+						sortMethod = new lastNameSort();
 						break;
 					case 3:
-						x = new numbersSort();
+						sortMethod = new numbersSort();
 						break;
 					}
-					((ArrayAdapter<Contact>) contactListV.getAdapter()).sort(x);
+					((ArrayAdapter<Contact>) contactListV.getAdapter()).sort(sortMethod);
 				}
 			});
 			AlertDialog dialog = builder.create();
@@ -170,23 +177,23 @@ public class ContactListActivity extends Activity {
 		super.onResume();
 		search.setText("");
 		values = datasource.getAllContacts();
-		filter = values;
+		filter = datasource.getAllContacts();
 		la = new ContactListAdapter(this, values);
 		contactListV.setAdapter(la);
+
+		((ArrayAdapter<Contact>) contactListV.getAdapter()).sort(sortMethod);
 	}
 
 	private class ContactListAdapter extends ArrayAdapter<Contact> implements Filterable{
 
 		private Context context;
 		private List<Contact> contacts;
-		private List<Contact> filter;
 
 		ContactListAdapter(Context context, List<Contact> contacts){
 			super(context, android.R.layout.simple_list_item_1,contacts);
 
 			this.context = context;
 			this.contacts = contacts;
-			this.filter = contacts;
 		}
 
 		public View getView(int position, View convertView, ViewGroup Parent){
@@ -228,7 +235,9 @@ public class ContactListActivity extends Activity {
 				}
 			}
 			la = new ContactListAdapter(ContactListActivity.this, filter);
-			contactListV.setAdapter(la);		                                                                               
+			contactListV.setAdapter(la);
+			((ArrayAdapter<Contact>) contactListV.getAdapter()).sort(sortMethod);
+
 		}
 	}
 	class searchDone implements OnEditorActionListener{

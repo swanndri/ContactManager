@@ -54,6 +54,13 @@
                     android:ems="10"
                     android:hint="@string/company"
                     android:inputType="textPersonName" />
+                <EditText
+                    android:id="@+id/Dob_enter"
+                    android:layout_width="296dp"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/dob"
+                    android:inputType="textPersonName" />
             </LinearLayout>
         </LinearLayout>
 

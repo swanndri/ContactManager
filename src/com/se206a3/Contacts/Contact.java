@@ -15,6 +15,7 @@ public class Contact{
 	private Name name;
 	private String company;
 	private String imagePath;
+	private String DOB;
 	
 	public List<PhNumber> numbers = new ArrayList<PhNumber>();
 	public List<Email> emails = new ArrayList<Email>();
@@ -24,10 +25,11 @@ public class Contact{
 	public Contact(){}
 
 
-	public Contact(Name name, String company, String imagePath, List<PhNumber> numbers, List<Email> emails, List<Address> address) {
+	public Contact(Name name, String company, String imagePath, String dob, List<PhNumber> numbers, List<Email> emails, List<Address> address) {
 		this.setName(name);
 		this.setCompany(company);
 		this.setImagePath(imagePath);
+		this.DOB = dob;
 		
 		this.numbers = numbers;
 		this.emails = emails;
@@ -248,6 +250,16 @@ public class Contact{
 
 	public void setImagePath(String selectedImagePath) {
 		this.imagePath = selectedImagePath;
+	}
+
+
+	public String getDOB() {
+		return DOB;
+	}
+
+
+	public void setDOB(String dOB) {
+		DOB = dOB;
 	}
 }
 

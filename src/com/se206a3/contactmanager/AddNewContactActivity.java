@@ -357,6 +357,8 @@ public class AddNewContactActivity extends Activity {
 		//Make contact
 		//Add to contacts
 		Contact contact = new Contact();
+		
+		contact.setImagePath(selectedImagePath);
 
 		Name nm = new Name();
 		String firstName =((EditText)findViewById(R.id.First_Name_enter)).getText().toString();
@@ -375,7 +377,8 @@ public class AddNewContactActivity extends Activity {
 
 		contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
 
-		contact.setImagePath(selectedImagePath);
+		contact.setDOB(((EditText)findViewById(R.id.Dob_enter)).getText().toString());
+		
 
 
 		for(int i=0;i<phnCount.size();i++){

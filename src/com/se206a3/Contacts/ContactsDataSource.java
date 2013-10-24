@@ -24,6 +24,7 @@ public class ContactsDataSource {
 			ContactDataBaseHelper.COLUMN_LASTNAME,
 			ContactDataBaseHelper.COLUMN_COMPANY,
 			ContactDataBaseHelper.COLUMN_IMAGE,
+			ContactDataBaseHelper.COLUMN_DOB,
 			ContactDataBaseHelper.COLUMN_PHONENUMBERS,
 			ContactDataBaseHelper.COLUMN_EMAILS,
 			ContactDataBaseHelper.COLUMN_ADDRESSES};
@@ -48,6 +49,8 @@ public class ContactsDataSource {
 		values.put(ContactDataBaseHelper.COLUMN_LASTNAME, contact.getName().getLastName());
 		values.put(ContactDataBaseHelper.COLUMN_COMPANY, contact.getCompany());
 		values.put(ContactDataBaseHelper.COLUMN_IMAGE, contact.getImagePath());
+		values.put(ContactDataBaseHelper.COLUMN_DOB,contact.getDOB());
+
 		StringBuilder PhoneNumbers_String = new StringBuilder();
 		StringBuilder Emails_String = new StringBuilder();
 		StringBuilder Address_String = new StringBuilder();
@@ -120,8 +123,9 @@ public class ContactsDataSource {
 		contact.setName(new Name(cursor.getString(1),cursor.getString(2))); //Set name with Name object
 		contact.setCompany(cursor.getString(3)); //Set company
 		contact.setImagePath(cursor.getString(4));
+		contact.setDOB(cursor.getString(5));
 
-		String phnNumbers = cursor.getString(5); //Get string of phnNumbers
+		String phnNumbers = cursor.getString(6); //Get string of phnNumbers
 		System.out.println(phnNumbers);
 		if (phnNumbers.length()!=0){
 			String[] indvPhnNumbers = phnNumbers.split("\\|"); 
@@ -131,7 +135,7 @@ public class ContactsDataSource {
 			}
 		}
 
-		String emails = cursor.getString(6);
+		String emails = cursor.getString(7);
 		if(emails.length()!=0){
 			String[] indvEmails = emails.split("\\|");
 			for (String em: indvEmails){
@@ -140,7 +144,7 @@ public class ContactsDataSource {
 			}
 		}
 
-		String address = cursor.getString(7);
+		String address = cursor.getString(8);
 		if(address.length()!=0){
 			String[] indvAddress = address.split("\\|");
 			for (String ad: indvAddress){

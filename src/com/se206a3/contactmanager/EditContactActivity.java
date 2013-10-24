@@ -59,10 +59,13 @@ public class EditContactActivity extends Activity {
 	}
 
 	public void addData(){
-
+		
 		((EditText)findViewById(R.id.First_Name_enter)).setText(Contact.toDisplay.getName().getFirstName());
 		((EditText)findViewById(R.id.Surname_enter)).setText(Contact.toDisplay.getName().getLastName());
 		((EditText)findViewById(R.id.Company_enter)).setText(Contact.toDisplay.getCompany());
+		((EditText)findViewById(R.id.Dob_enter)).setText(Contact.toDisplay.getDOB());
+		
+		
 		img = (ImageView)findViewById(R.id.add_profilePic);
 		selectedImagePath = Contact.toDisplay.getImagePath();
 		if(Contact.toDisplay.getImagePath()!=null){
@@ -243,7 +246,7 @@ public class EditContactActivity extends Activity {
 		ImageView delete = new ImageView(this);
 		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
 		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
-		delete.setOnClickListener(new deleteClick());
+		delete.setOnClickListener(new deletePhoneClick());
 
 		//Add views to super layout
 		phoneBoxDataEntryLayout.addView(phoneBoxSpinner);
@@ -286,7 +289,7 @@ public class EditContactActivity extends Activity {
 		ImageView delete = new ImageView(this);
 		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
 		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
-		delete.setOnClickListener(new deleteClick());
+		delete.setOnClickListener(new deleteEmailClick());
 
 		//Add views to super layout
 		emailBoxDataEntryLayout.addView(emailBoxSpinner);
@@ -482,6 +485,7 @@ public class EditContactActivity extends Activity {
 		contact.setName(nm);
 
 		contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
+		contact.setDOB(((EditText)findViewById(R.id.Dob_enter)).getText().toString());
 
 		contact.setImagePath(selectedImagePath);
 
@@ -569,7 +573,7 @@ public class EditContactActivity extends Activity {
 
 	}
 
-	class deleteClick implements OnClickListener{
+	class deletePhoneClick implements OnClickListener{
 		@Override
 		public void onClick(View v) {
 			ImageView view = (ImageView) v;
@@ -584,6 +588,22 @@ public class EditContactActivity extends Activity {
 		}
 
 	}
+	
+	class deleteEmailClick implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			ImageView view = (ImageView) v;
+			LinearLayout l = (LinearLayout) view.getParent();
+
+			Spinner x = (Spinner)l.getChildAt(0);
+			emailCount.remove(x);
+			EditText y = (EditText)l.getChildAt(1);
+			emailCount.remove(y);
+			l.removeAllViews();
+
+		}
+
+	}
 
 	class deleteAddClick implements OnClickListener{
 		@Override
@@ -592,11 +612,12 @@ public class EditContactActivity extends Activity {
 			LinearLayout l = (LinearLayout) view.getParent();
 
 			Spinner x = (Spinner)l.getChildAt(0);
-			phnCount.remove(x);
+			addCount.remove(x);
 			LinearLayout y = (LinearLayout)l.getChildAt(1);
 
 			for(int i=0;i<y.getChildCount(); i++){
 				phnCount.remove(y.getChildAt(i));
+				addCount.remove(y.getChildAt(i));
 			}
 			l.removeAllViews();
 

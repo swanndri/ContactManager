@@ -59,6 +59,7 @@ public class ContactDetailActivity extends Activity {
 		ImageView ProfilePic = (ImageView)findViewById(R.id.Profile_pic);
 		TextView Name = (TextView)findViewById(R.id.Name);
 		TextView Company = (TextView)findViewById(R.id.Company);
+		TextView DateOfBirth = (TextView)findViewById(R.id.Dob);
 		LinearLayout PhoneBox = (LinearLayout)findViewById(R.id.PhoneBox);
 		LinearLayout EmailBox = (LinearLayout)findViewById(R.id.EmailBox);
 		LinearLayout AddressBox = (LinearLayout)findViewById(R.id.AddBox);
@@ -71,6 +72,7 @@ public class ContactDetailActivity extends Activity {
 
 		Name.setText(contact.getName().getFirstName()+" "+contact.getName().getLastName());
 		Company.setText(contact.getCompany());
+		DateOfBirth.setText(contact.getDOB());
 
 		//Fill super layouts
 		addPhoneNumbers(PhoneBox);
@@ -156,7 +158,7 @@ public class ContactDetailActivity extends Activity {
 
 		if(contact.emails.size()==0){
 			TextView email = new TextView(this);
-			email.setText("No phone numbers to display");
+			email.setText("No emails to display");
 			EmailBox.addView(email);
 		}
 
@@ -224,7 +226,7 @@ public class ContactDetailActivity extends Activity {
 
 		if(contact.address.size()==0){
 			TextView address = new TextView(this);
-			address.setText("No phone numbers to display");
+			address.setText("No addresses to display");
 			AddressBox.addView(address);
 		}
 
