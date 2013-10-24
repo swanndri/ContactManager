@@ -7,7 +7,6 @@ import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.PhoneNumber;
 import com.se206a3.contactmanager.R;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,17 +20,28 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * @author Ben Brown
+ * Activity to display the details of a specific contact.
+ */
 public class ContactDetailActivity extends Activity {
+	/**
+	 * The contact to display the details of.
+	 */
 	public Contact contact;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_detail);
-		contact = Contact.static_contactToDisplay;
-		addContent(); //Add all content of contact to contact_detail layout dynamically.
+		
+		contact = Contact.static_contactToDisplay; // Set contact to be displayed
+		addContent(); // Add all content of contact to contact_detail layout dynamically.
 	}
 
 	@Override
+	/**
+	 * Inflates the menu at the top of the screen.
+	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.contact_detail, menu);
@@ -41,10 +51,11 @@ public class ContactDetailActivity extends Activity {
 
 
 	/**
-	 * Creates and sets three basic items:
+	 * Creates and sets four basic items:
 	 * 		Profile picture
 	 * 		Name (FirstName+LastName)
 	 * 		Company
+	 * 		Date of birth
 	 * 
 	 * Then creates three super layouts for the information to be stored in:
 	 * 		PhoneBox
@@ -64,7 +75,7 @@ public class ContactDetailActivity extends Activity {
 		LinearLayout EmailBox = (LinearLayout)findViewById(R.id.EmailBox);
 		LinearLayout AddressBox = (LinearLayout)findViewById(R.id.AddBox);
 
-		//Set three basic items
+		//Set four basic items
 		if(contact.getImagePath()!=null){
 			ProfilePic.setImageBitmap(BitmapFactory.decodeFile(contact.getImagePath()));
 			ProfilePic.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
@@ -249,31 +260,38 @@ public class ContactDetailActivity extends Activity {
 		l.addView(breakBar);
 	}
 
+	@Override
+	/**
+	 * Method run when a item is clicked in the menu bar, or options list.
+	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.action_editContact:
+		case R.id.action_editContact: // Edit button clicked
+			// Start edit activity
 			Intent editContact = new Intent();
 			editContact.setClass(this, EditContactActivity.class);
 			startActivity(editContact);
 			this.finish();
 			break;
-		case R.id.action_deleteContact: 
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		case R.id.action_deleteContact: // Delete button clicked
+			AlertDialog.Builder builder = new AlertDialog.Builder(this); // Create builder
 
+			//Set builder attributes
 			builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				@Override
 				public void onClick(DialogInterface dialog, int id) {
 					// User cancelled the dialog
 				}
 			});
 			builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				@Override
 				public void onClick(DialogInterface dialog, int id) {
 					// User clicked save and quit button
-					ContactListActivity.datasource.deleteContact(Contact.static_contactToDisplay);
+					ContactListActivity.datasource.deleteContact(Contact.static_contactToDisplay); // Delete contact from the database
 					finish();
 				}
 			});
 			builder.setTitle("Are you sure you want to delete " + Contact.static_contactToDisplay.getName().getFirstName() +" "+ Contact.static_contactToDisplay.getName().getLastName()+ "?");
-			// Set other dialog properties
 
 			// Create the AlertDialog
 			AlertDialog dialog = builder.create();
