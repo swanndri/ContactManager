@@ -187,11 +187,11 @@ public class AddNewContactActivity extends Activity {
 		//Simple_spinner_item = 1 line of text
 		phoneBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Phone_Spinner)));
 
-
+		// Add a delete button to each data entry layout
 		ImageView delete = new ImageView(this);
 		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
 		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
-		delete.setOnClickListener(new deleteClick());
+		delete.setOnClickListener(new deletePhoneNumberClick());
 
 		//Add views to super layout
 		phoneBoxDataEntryLayout.addView(phoneBoxSpinner);
@@ -231,11 +231,11 @@ public class AddNewContactActivity extends Activity {
 		//Simple_spinner_item = 1 line of text		
 		emailBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Email_Spinner)));
 
-
+		// Add a delete button to each data entry layout
 		ImageView delete = new ImageView(this);
 		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
 		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
-		delete.setOnClickListener(new deleteClick());
+		delete.setOnClickListener(new deleteEmailClick());
 
 		//Add views to super layout
 		emailBoxDataEntryLayout.addView(emailBoxSpinner);
@@ -313,6 +313,7 @@ public class AddNewContactActivity extends Activity {
 		//Simple_spinner_item = 1 line of text		
 		addressBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Address_Spinner)));
 
+		// Add a delete button to each data entry layout
 		ImageView delete = new ImageView(this);
 		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
 		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
@@ -397,7 +398,10 @@ public class AddNewContactActivity extends Activity {
 
 	}
 
-
+/**
+ * Creates a contact from the information entered in the screen.
+ * @return
+ */
 	public Contact makeNewContact(){
 		
 		// Create new contact object
@@ -427,7 +431,7 @@ public class AddNewContactActivity extends Activity {
 		
 
 		// For all phone number data entry views, create a new phone number object and add to contact
-		// If phonenumber = empty, set as no number give.
+		// If phone number = empty, set as no number give.
 		for(int i=0;i<_phoneDataEntryViewsList.size();i++){
 			PhoneNumber phn = new PhoneNumber();
 			phn.setType(((Spinner) _phoneDataEntryViewsList.get(i)).getSelectedItem().toString());
@@ -441,7 +445,7 @@ public class AddNewContactActivity extends Activity {
 		}
 
 		// For all email data entry views, create a new email object and add to contact
-		// If email = empty, set as no email give.
+		// If email = empty, set as no email given.
 		for(int i=0;i<_emailDataEntryViewList.size();i++){
 			Email em = new Email();
 			em.setType(((Spinner) _emailDataEntryViewList.get(i)).getSelectedItem().toString());
@@ -516,10 +520,10 @@ public class AddNewContactActivity extends Activity {
 	/**
 	 * 
 	 * @author Ben Brown
-	 * Click listener for delete button for phonenumber/email input views.
+	 * Click listener for delete button for phone number input views.
 	 * Deletes views.
 	 */
-	class deleteClick implements OnClickListener{
+	class deletePhoneNumberClick implements OnClickListener{
 		@Override
 		public void onClick(View v) {
 			ImageView view = (ImageView) v; // Clicked view
@@ -535,6 +539,30 @@ public class AddNewContactActivity extends Activity {
 		}
 		
 	}
+	
+	/**
+	 * 
+	 * @author Ben Brown
+	 * Click listener for delete button for email input views.
+	 * Deletes views.
+	 */
+	class deleteEmailClick implements OnClickListener{
+		@Override
+		public void onClick(View v) {
+			ImageView view = (ImageView) v; // Clicked view
+			LinearLayout l = (LinearLayout) view.getParent();
+
+			// Delete views
+			Spinner x = (Spinner)l.getChildAt(0);
+			_emailDataEntryViewList.remove(x);
+			EditText y = (EditText)l.getChildAt(1);
+			_emailDataEntryViewList.remove(y);
+			l.removeAllViews();
+
+		}
+
+	}
+	
 	/**
 	 * 
 	 * @author Ben Brown

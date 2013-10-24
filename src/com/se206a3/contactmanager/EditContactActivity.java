@@ -9,8 +9,6 @@ import com.se206a3.Contacts.Contact.Address;
 import com.se206a3.Contacts.Contact.Email;
 import com.se206a3.Contacts.Contact.Name;
 import com.se206a3.Contacts.Contact.PhoneNumber;
-import com.se206a3.contactmanager.AddNewContactActivity.deleteAddClick;
-import com.se206a3.contactmanager.AddNewContactActivity.deleteClick;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,85 +32,141 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 
+/**
+ * @author Ben Brown
+ * Activity to edit the details of a specific contact.
+ */
 public class EditContactActivity extends Activity {
-	private static final int SELECT_PICTURE = 1;
-	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
-	private List<android.view.View> emailCount = new ArrayList<android.view.View>();
-	private List<android.view.View> addCount = new ArrayList<android.view.View>();
-	private ImageView img;
-	private String selectedImagePath;
+	/**
+	 * A value that acts as a check in getting the profile picture.
+	 */
 	private int RESULT_LOAD_IMAGE = 1;
 
+	/**
+	 * List that contains all the data entry views that are used to add/edit phone numbers.
+	 */
+	private List<android.view.View> phnCount = new ArrayList<android.view.View>();
+
+	/**
+	 * List that contains all the data entry views that are used to add/edit phone numbers.
+	 */
+	private List<android.view.View> emailCount = new ArrayList<android.view.View>();
+
+	/**
+	 * List that contains all the data entry views that are used to add/edit emails.
+	 */
+	private List<android.view.View> addCount = new ArrayList<android.view.View>();
+
+	/**
+	 * ImageView for the contacts profile picture.
+	 */
+	private ImageView img;
+
+	/**
+	 * String of the filepath for the profile picture.
+	 */
+	private String selectedImagePath;
+
+
 	@Override
+	/**
+	 * Method that is run when the activity is started.
+	 */
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_add);
-		
-		addData();
+
+		addData(); //Adds all data stored in the contact
 	}
 
 	@Override
+	/**
+	 * Inflates the menu at the top of the screen.
+	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.contact_add, menu);
 		return true;
 	}
 
+	/**
+	 * Adds all the appropriate data from the contact to the screen, for editing.
+	 */
 	public void addData(){
-		
+
+		// Set the basic EditTexts with their data
 		((EditText)findViewById(R.id.First_Name_enter)).setText(Contact.static_contactToDisplay.getName().getFirstName());
 		((EditText)findViewById(R.id.Surname_enter)).setText(Contact.static_contactToDisplay.getName().getLastName());
 		((EditText)findViewById(R.id.Company_enter)).setText(Contact.static_contactToDisplay.getCompany());
 		((EditText)findViewById(R.id.Dob_enter)).setText(Contact.static_contactToDisplay.getDateOfBirth());
-		
-		
+
+		// Set the profile picture
 		img = (ImageView)findViewById(R.id.add_profilePic);
 		selectedImagePath = Contact.static_contactToDisplay.getImagePath();
 		if(Contact.static_contactToDisplay.getImagePath()!=null){
 			img.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));
-            img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
+			img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
 		}
 
+		// For each phone number add an edit box and fill with data
 		for (PhoneNumber ph:Contact.static_contactToDisplay.phoneNumber_list){
 			editPhoneNumber(ph);
 		}
+
+		// For each email  add an edit box and fill with data
 		for (Email em:Contact.static_contactToDisplay.email_list){
 			editEmail(em);
 		}
+
+		// For each address add an edit box and fill with data
 		for(Address ad:Contact.static_contactToDisplay.address_list){
 			editAdd(ad);
 		}
 
 
 	}
+
+	/**
+	 * Run on click of the profile picture view.
+	 * Allows the user to select a picture from the gallery.
+	 * @param V
+	 */
 	public void addPhoto(View V){
+		// Start gallery activity for result of picture
 		Intent i = new Intent(
 				Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-				startActivityForResult(i, RESULT_LOAD_IMAGE);
+		startActivityForResult(i, RESULT_LOAD_IMAGE);
 	}
 
 	@Override
-	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	     super.onActivityResult(requestCode, resultCode, data);
-	      
-	     if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
-	         Uri selectedImage = data.getData();
-	         String[] filePathColumn = { MediaStore.Images.Media.DATA };
-	 
-	         Cursor cursor = getContentResolver().query(selectedImage,
-	                 filePathColumn, null, null, null);
-	         cursor.moveToFirst();
-	 
-	         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-	         selectedImagePath = cursor.getString(columnIndex);
-	         cursor.close();
-	         
-	         img.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));
-             img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
-             
-	                      
-	         // String picturePath contains the path of selected Image
-	     }
+	/**
+	 * Runs when a activity for result returns.
+	 * Ie. When a profile picture is selected.
+	 * 
+	 * Saves the file path of the selected image.
+	 */
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		// If valid return
+		if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+
+			// Get file path and save to database
+			Uri selectedImage = data.getData();
+			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+			Cursor cursor = getContentResolver().query(selectedImage,
+					filePathColumn, null, null, null);
+			cursor.moveToFirst();
+
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			selectedImagePath = cursor.getString(columnIndex);
+			cursor.close();
+
+			// Set the profile picture view to display the selected picture
+			img.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));
+			img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
+		}
 	}
 
 	/** 
@@ -126,12 +180,17 @@ public class EditContactActivity extends Activity {
 		phoneBoxLayout.addView(phoneBoxDataEntryLayout);	//Add data entry box to the super layout
 	}
 
+	/**
+	 * Dynamically adds all of the appropriate data for each phone number to a edit box
+	 * @param ph - The phone number to be added
+	 */
 	public void editPhoneNumber(PhoneNumber ph){
 
 		LinearLayout phoneBoxLayout = (LinearLayout) findViewById(R.id.Add_PhoneBox); //Get super (constraining) layout for phone numbers
 		LinearLayout phoneBoxDataEntryLayout = createPhoneDataBox();	//Dynamically create a new data entry box for a phone number
 		List<String> SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Phone_Spinner));
 
+		// For each data entry view, set the text to the data in the phone number
 		for(int i=0; i<((LinearLayout)phoneBoxDataEntryLayout).getChildCount(); i++) {
 			Spinner phnSpinner = (Spinner) (phoneBoxDataEntryLayout).getChildAt(i);
 			phnSpinner.setSelection(SpinnerOp.indexOf(ph.getType()));
@@ -152,11 +211,16 @@ public class EditContactActivity extends Activity {
 		emailBoxLayout.addView(emailBoxDataEntryLayout);	//Add data entry box to the super layout
 	}
 
+	/**
+	 * Dynamically adds all of the appropriate data for each email to a edit box
+	 * @param em - The email to be added
+	 */
 	public void editEmail(Email em){
 		LinearLayout emailBoxLayout = (LinearLayout) findViewById(R.id.Add_EmailBox);	//Get super (constraining) layout for emails
 		LinearLayout emailBoxDataEntryLayout = createEmailDataBox();	//Dynamically create a new data entry box for an email
 		List<String> SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Email_Spinner));
 
+		// For each data entry view, set the text to the data in the email
 		for(int i=0; i<((LinearLayout)emailBoxDataEntryLayout).getChildCount(); i++) {
 			Spinner emSpinner = (Spinner) (emailBoxDataEntryLayout).getChildAt(i);
 			emSpinner.setSelection(SpinnerOp.indexOf(em.getType()));
@@ -176,14 +240,17 @@ public class EditContactActivity extends Activity {
 		LinearLayout addressBoxDataEntryLayout = createAddDataBox();	//Dynamically create a new data entry box for an address
 		addressBoxLayout.addView(addressBoxDataEntryLayout);	//Add data entry box to super layout
 	}
-
+	
+	/**
+	 * Dynamically adds all of the appropriate data for each address to a edit box
+	 * @param ad - The address to be added
+	 */
 	public void editAdd(Address ad){
 		LinearLayout addressBoxLayout = (LinearLayout) findViewById(R.id.Add_AddBox);	//Get super (constraining) layout for address'
 		LinearLayout addressBoxDataEntryLayout = createAddDataBox();	//Dynamically create a new data entry box for an address
 		List<String> SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Address_Spinner));
 
-		System.out.println(((LinearLayout)addressBoxDataEntryLayout).getChildCount());
-
+		// For each data entry view, set the text to the data in the address
 		for(int i=0; i<((LinearLayout)addressBoxDataEntryLayout).getChildCount();i++) {
 			Spinner adSpinner = (Spinner) (addressBoxDataEntryLayout).getChildAt(i);
 			adSpinner.setSelection(SpinnerOp.indexOf(ad.getType()));
@@ -243,6 +310,7 @@ public class EditContactActivity extends Activity {
 		//Simple_spinner_item = 1 line of text
 		phoneBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Phone_Spinner)));
 
+		// Add a delete button to each data entry layout
 		ImageView delete = new ImageView(this);
 		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
 		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
@@ -286,6 +354,7 @@ public class EditContactActivity extends Activity {
 		//Simple_spinner_item = 1 line of text		
 		emailBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Email_Spinner)));
 
+		// Add a delete button to each data entry layout
 		ImageView delete = new ImageView(this);
 		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
 		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
@@ -403,10 +472,11 @@ public class EditContactActivity extends Activity {
 			Contact toBeAdded = makeNewContact();	//Create new contact object
 			ContactListActivity.datasource.createContact(toBeAdded);
 			Contact.static_contactToDisplay = ContactListActivity.datasource.mostRecentContact;
-			
+
+			// Hide keyboard
 			InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-				
+
 			Intent Details = new Intent();
 			Details.setClass(EditContactActivity.this,ContactDetailActivity.class);
 			startActivity(Details);
@@ -460,20 +530,22 @@ public class EditContactActivity extends Activity {
 
 	}
 
-
+	/**
+	 * Creates a contact from the information entered in the screen.
+	 * @return
+	 */
 	public Contact makeNewContact(){
-		//For every edittext, get info and save
-		//Make contact
-		//Add to contacts
+		
+		// Create new contact object and delete old copy of contact
 		Contact contact = new Contact();
 		ContactListActivity.datasource.deleteContact(Contact.static_contactToDisplay);
 
-
+		// Set basic data
 		Name nm = new Name();
 		String firstName =((EditText)findViewById(R.id.First_Name_enter)).getText().toString();
 		String lastName =((EditText)findViewById(R.id.Surname_enter)).getText().toString();
 
-
+		// If name is empty, set as no name
 		if(firstName.trim().equals("")&&lastName.trim().equals("")){
 			nm.setFirstName("No");
 			nm.setLastName("Name");
@@ -490,6 +562,8 @@ public class EditContactActivity extends Activity {
 		contact.setImagePath(selectedImagePath);
 
 
+		// For all phone number data entry views, create a new phone number object and add to contact
+		// If phone number = empty, set as no number give.
 		for(int i=0;i<phnCount.size();i++){
 			PhoneNumber phn = new PhoneNumber();
 			phn.setType(((Spinner) phnCount.get(i)).getSelectedItem().toString());
@@ -501,7 +575,9 @@ public class EditContactActivity extends Activity {
 			}
 			contact.phoneNumber_list.add(phn);
 		}
-
+		
+		// For all email data entry views, create a new email object and add to contact
+		// If email = empty, set as no email given.
 		for(int i=0;i<emailCount.size();i++){
 			Email em = new Email();
 			em.setType(((Spinner) emailCount.get(i)).getSelectedItem().toString());
@@ -514,6 +590,8 @@ public class EditContactActivity extends Activity {
 			contact.email_list.add(em);
 		}
 
+		// For all address data entry views, create a new address object and add to contact
+		// If field = empty, set as no FIELD given.
 		for(int i=0;i<addCount.size();i++){
 			Address ad = new Address();
 			ad.setType(((Spinner) addCount.get(i)).getSelectedItem().toString());
@@ -572,13 +650,20 @@ public class EditContactActivity extends Activity {
 
 
 	}
-
+	
+	/**
+	 * 
+	 * @author Ben Brown
+	 * Click listener for delete button for phonenumber input views.
+	 * Deletes views.
+	 */
 	class deletePhoneClick implements OnClickListener{
 		@Override
 		public void onClick(View v) {
-			ImageView view = (ImageView) v;
+			ImageView view = (ImageView) v; // Clicked view 
 			LinearLayout l = (LinearLayout) view.getParent();
 
+			// Delete input views
 			Spinner x = (Spinner)l.getChildAt(0);
 			phnCount.remove(x);
 			EditText y = (EditText)l.getChildAt(1);
@@ -588,13 +673,20 @@ public class EditContactActivity extends Activity {
 		}
 
 	}
-	
+
+	/**
+	 * 
+	 * @author Ben Brown
+	 * Click listener for delete button for email input views.
+	 * Deletes views.
+	 */
 	class deleteEmailClick implements OnClickListener{
 		@Override
 		public void onClick(View v) {
-			ImageView view = (ImageView) v;
+			ImageView view = (ImageView) v; // Clicked view
 			LinearLayout l = (LinearLayout) view.getParent();
 
+			// Delete views
 			Spinner x = (Spinner)l.getChildAt(0);
 			emailCount.remove(x);
 			EditText y = (EditText)l.getChildAt(1);
@@ -605,12 +697,19 @@ public class EditContactActivity extends Activity {
 
 	}
 
+	/**
+	 * 
+	 * @author Ben Brown
+	 * Click listener for delete button for address input views.
+	 * Deletes views.
+	 */
 	class deleteAddClick implements OnClickListener{
 		@Override
 		public void onClick(View v) {
-			ImageView view = (ImageView) v;
+			ImageView view = (ImageView) v; // Clicked view
 			LinearLayout l = (LinearLayout) view.getParent();
 
+			// Delete views
 			Spinner x = (Spinner)l.getChildAt(0);
 			addCount.remove(x);
 			LinearLayout y = (LinearLayout)l.getChildAt(1);
