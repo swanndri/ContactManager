@@ -20,6 +20,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,11 +39,13 @@ public class EditContactActivity extends Activity {
 	private List<android.view.View> addCount = new ArrayList<android.view.View>();
 	private ImageView img;
 	private String selectedImagePath;
+	private int RESULT_LOAD_IMAGE = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contact_add);
+		
 		addData();
 	}
 
@@ -58,9 +61,11 @@ public class EditContactActivity extends Activity {
 		((EditText)findViewById(R.id.First_Name_enter)).setText(Contact.toDisplay.getName().getFirstName());
 		((EditText)findViewById(R.id.Surname_enter)).setText(Contact.toDisplay.getName().getLastName());
 		((EditText)findViewById(R.id.Company_enter)).setText(Contact.toDisplay.getCompany());
+		img = (ImageView)findViewById(R.id.add_profilePic);
+		selectedImagePath = Contact.toDisplay.getImagePath();
 		if(Contact.toDisplay.getImagePath()!=null){
-			((ImageView)findViewById(R.id.add_profilePic)).setImageURI(Uri.parse(Contact.toDisplay.getImagePath()));
-			((ImageView)findViewById(R.id.add_profilePic)).setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
+			img.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));
+            img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
 		}
 
 		for (PhNumber ph:Contact.toDisplay.numbers){
@@ -72,34 +77,39 @@ public class EditContactActivity extends Activity {
 		for(Address ad:Contact.toDisplay.address){
 			editAdd(ad);
 		}
-		
+
 
 	}
 	public void addPhoto(View V){
-		Intent intent = new Intent();
-		intent.setType("image/*");
-		intent.setAction(Intent.ACTION_GET_CONTENT);
-		startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
+		Intent i = new Intent(
+				Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				startActivityForResult(i, RESULT_LOAD_IMAGE);
 	}
 
-	 public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	        if (resultCode == RESULT_OK) {
-	            if (requestCode == SELECT_PICTURE) {
-	                Uri selectedImageUri = data.getData();
-	                selectedImagePath = getPath(selectedImageUri);
-	                System.out.println("Image Path : " + selectedImagePath);
-	                img.setImageURI(selectedImageUri);
-	                img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
-	            }
-	        }
-	    }
-	   public String getPath(Uri uri) {
-	        String[] projection = { MediaStore.Images.Media.DATA };
-	        Cursor cursor = managedQuery(uri, projection, null, null, null);
-	        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-	        cursor.moveToFirst();
-	        return cursor.getString(column_index);
-	    }
+	@Override
+	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	     super.onActivityResult(requestCode, resultCode, data);
+	      
+	     if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+	         Uri selectedImage = data.getData();
+	         String[] filePathColumn = { MediaStore.Images.Media.DATA };
+	 
+	         Cursor cursor = getContentResolver().query(selectedImage,
+	                 filePathColumn, null, null, null);
+	         cursor.moveToFirst();
+	 
+	         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+	         selectedImagePath = cursor.getString(columnIndex);
+	         cursor.close();
+	         
+	         img.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));
+             img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
+             
+	                      
+	         // String picturePath contains the path of selected Image
+	     }
+	}
+
 	/** 
 	 * Dynamically adds a data entry box for a phone number to the contact_add layout.
 	 * */
@@ -168,14 +178,14 @@ public class EditContactActivity extends Activity {
 		List<String> SpinnerOp = Arrays.asList(getResources().getStringArray(R.array.Address_Spinner));
 
 		System.out.println(((LinearLayout)addressBoxDataEntryLayout).getChildCount());
-		
+
 		for(int i=0; i<((LinearLayout)addressBoxDataEntryLayout).getChildCount();i++) {
 			Spinner adSpinner = (Spinner) (addressBoxDataEntryLayout).getChildAt(i);
 			adSpinner.setSelection(SpinnerOp.indexOf(ad.getType()));
 			i++;
 			LinearLayout tf = (LinearLayout)addressBoxDataEntryLayout.getChildAt(i);
 			for(int j=0;j<tf.getChildCount();j++){
-				
+
 				EditText street1EditText = (EditText)(tf).getChildAt(j);
 				street1EditText.setText(ad.getStreet1());
 				j++;
@@ -195,7 +205,7 @@ public class EditContactActivity extends Activity {
 				countryEditText.setText(ad.getCountry());
 			}
 			i++;
-			
+
 		}
 		addressBoxLayout.addView(addressBoxDataEntryLayout);	//Add data entry box to super layout
 	}
@@ -227,7 +237,7 @@ public class EditContactActivity extends Activity {
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text
 		phoneBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Phone_Spinner)));
-		
+
 		ImageView delete = new ImageView(this);
 		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
 		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
@@ -270,7 +280,7 @@ public class EditContactActivity extends Activity {
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text		
 		emailBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Email_Spinner)));
-		
+
 		ImageView delete = new ImageView(this);
 		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
 		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
@@ -352,7 +362,7 @@ public class EditContactActivity extends Activity {
 		//Create adapter for the spinner and assign it.
 		//Simple_spinner_item = 1 line of text		
 		addressBoxSpinner.setAdapter(new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,getResources().getStringArray(R.array.Address_Spinner)));
-		
+
 		ImageView delete = new ImageView(this);
 		delete.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,2.5f));
 		delete.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_remove));
@@ -444,111 +454,111 @@ public class EditContactActivity extends Activity {
 
 	public Contact makeNewContact(){
 		//For every edittext, get info and save
-				//Make contact
-				//Add to contacts
-				Contact contact = new Contact();
-				ContactListActivity.datasource.deleteContact(Contact.toDisplay);
+		//Make contact
+		//Add to contacts
+		Contact contact = new Contact();
+		ContactListActivity.datasource.deleteContact(Contact.toDisplay);
 
 
-				Name nm = new Name();
-				String firstName =((EditText)findViewById(R.id.First_Name_enter)).getText().toString();
-				String lastName =((EditText)findViewById(R.id.Surname_enter)).getText().toString();
+		Name nm = new Name();
+		String firstName =((EditText)findViewById(R.id.First_Name_enter)).getText().toString();
+		String lastName =((EditText)findViewById(R.id.Surname_enter)).getText().toString();
 
 
-				if(firstName.trim().equals("")&&lastName.trim().equals("")){
-					nm.setFirstName("No");
-					nm.setLastName("Name");
-				}else{
-					nm.setFirstName(firstName);
-					nm.setLastName(lastName);
-				}
+		if(firstName.trim().equals("")&&lastName.trim().equals("")){
+			nm.setFirstName("No");
+			nm.setLastName("Name");
+		}else{
+			nm.setFirstName(firstName);
+			nm.setLastName(lastName);
+		}
 
-				contact.setName(nm);
+		contact.setName(nm);
 
-				contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
+		contact.setCompany(((EditText)findViewById(R.id.Company_enter)).getText().toString());
 
-				contact.setImagePath(selectedImagePath);
+		contact.setImagePath(selectedImagePath);
 
 
-				for(int i=0;i<phnCount.size();i++){
-					PhNumber phn = new PhNumber();
-					phn.setType(((Spinner) phnCount.get(i)).getSelectedItem().toString());
-					i++;
-					if(((EditText) phnCount.get(i)).getText().toString().equals("")){
-						phn.setNumber("No number given");
-					}else{
-						phn.setNumber(((EditText) phnCount.get(i)).getText().toString());
-					}
-					contact.numbers.add(phn);
-				}
+		for(int i=0;i<phnCount.size();i++){
+			PhNumber phn = new PhNumber();
+			phn.setType(((Spinner) phnCount.get(i)).getSelectedItem().toString());
+			i++;
+			if(((EditText) phnCount.get(i)).getText().toString().equals("")){
+				phn.setNumber("No number given");
+			}else{
+				phn.setNumber(((EditText) phnCount.get(i)).getText().toString());
+			}
+			contact.numbers.add(phn);
+		}
 
-				for(int i=0;i<emailCount.size();i++){
-					Email em = new Email();
-					em.setType(((Spinner) emailCount.get(i)).getSelectedItem().toString());
-					i++;
-					if(((EditText) emailCount.get(i)).getText().toString().equals("")){
-						em.setEmail("No email given");
-					}else{
-						em.setEmail(((EditText) emailCount.get(i)).getText().toString());
-					}
-					contact.emails.add(em);
-				}
+		for(int i=0;i<emailCount.size();i++){
+			Email em = new Email();
+			em.setType(((Spinner) emailCount.get(i)).getSelectedItem().toString());
+			i++;
+			if(((EditText) emailCount.get(i)).getText().toString().equals("")){
+				em.setEmail("No email given");
+			}else{
+				em.setEmail(((EditText) emailCount.get(i)).getText().toString());
+			}
+			contact.emails.add(em);
+		}
 
-				for(int i=0;i<addCount.size();i++){
-					Address ad = new Address();
-					ad.setType(((Spinner) addCount.get(i)).getSelectedItem().toString());
-					i++;
+		for(int i=0;i<addCount.size();i++){
+			Address ad = new Address();
+			ad.setType(((Spinner) addCount.get(i)).getSelectedItem().toString());
+			i++;
 
-					if(((EditText) addCount.get(i)).getText().toString().equals("")){
-						ad.setStreet1("No street given");
-					}else{
-						ad.setStreet1(((EditText) addCount.get(i)).getText().toString());
-					}
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setStreet1("No street given");
+			}else{
+				ad.setStreet1(((EditText) addCount.get(i)).getText().toString());
+			}
 
-					i++;
+			i++;
 
-					if(((EditText) addCount.get(i)).getText().toString().equals("")){
-						ad.setStreet2("No street given");
-					}else{
-						ad.setStreet2(((EditText) addCount.get(i)).getText().toString());
-					}
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setStreet2("No street given");
+			}else{
+				ad.setStreet2(((EditText) addCount.get(i)).getText().toString());
+			}
 
-					i++;
+			i++;
 
-					if(((EditText) addCount.get(i)).getText().toString().equals("")){
-						ad.setSuburb("No suburb given");
-					}else{
-						ad.setSuburb(((EditText) addCount.get(i)).getText().toString());
-					}
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setSuburb("No suburb given");
+			}else{
+				ad.setSuburb(((EditText) addCount.get(i)).getText().toString());
+			}
 
-					i++;
+			i++;
 
-					if(((EditText) addCount.get(i)).getText().toString().equals("")){
-						ad.setCity("No city given");
-					}else{
-						ad.setCity(((EditText) addCount.get(i)).getText().toString());
-					}
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setCity("No city given");
+			}else{
+				ad.setCity(((EditText) addCount.get(i)).getText().toString());
+			}
 
-					i++;
+			i++;
 
-					if(((EditText) addCount.get(i)).getText().toString().equals("")){
-						ad.setPostCode("No postcode given ");
-					}else{
-						ad.setPostCode(((EditText) addCount.get(i)).getText().toString());
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setPostCode("No postcode given ");
+			}else{
+				ad.setPostCode(((EditText) addCount.get(i)).getText().toString());
 
-					}
+			}
 
-					i++;
+			i++;
 
-					if(((EditText) addCount.get(i)).getText().toString().equals("")){
-						ad.setCountry("No country given");
-					}else{
-						ad.setCountry(((EditText) addCount.get(i)).getText().toString());
-					}
+			if(((EditText) addCount.get(i)).getText().toString().equals("")){
+				ad.setCountry("No country given");
+			}else{
+				ad.setCountry(((EditText) addCount.get(i)).getText().toString());
+			}
 
-					contact.address.add(ad);
-				}
-				return contact;
+			contact.address.add(ad);
+		}
+		return contact;
 
 
 	}
@@ -566,9 +576,9 @@ public class EditContactActivity extends Activity {
 			l.removeAllViews();
 
 		}
-		
+
 	}
-	
+
 	class deleteAddClick implements OnClickListener{
 		@Override
 		public void onClick(View v) {
@@ -578,7 +588,7 @@ public class EditContactActivity extends Activity {
 			Spinner x = (Spinner)l.getChildAt(0);
 			phnCount.remove(x);
 			LinearLayout y = (LinearLayout)l.getChildAt(1);
-			
+
 			for(int i=0;i<y.getChildCount(); i++){
 				phnCount.remove(y.getChildAt(i));
 			}

@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -64,7 +65,7 @@ public class ContactDetailActivity extends Activity {
 
 		//Set three basic items
 		if(contact.getImagePath()!=null){
-			ProfilePic.setImageURI(Uri.parse(contact.getImagePath()));
+			ProfilePic.setImageBitmap(BitmapFactory.decodeFile(contact.getImagePath()));
 			ProfilePic.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
 		}
 

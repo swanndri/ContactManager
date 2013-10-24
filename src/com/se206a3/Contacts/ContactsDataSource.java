@@ -158,7 +158,6 @@ public class ContactsDataSource {
 	}
 
 	public void deleteAll(){
-
 		database.delete(ContactDataBaseHelper.TABLE_CONTACTS, ContactDataBaseHelper.COLUMN_ID, null);
 	}
 } 

@@ -16,7 +16,8 @@
         android:debuggable="true">
         <activity
             android:name="com.se206a3.contactmanager.ContactListActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name" 
+            android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

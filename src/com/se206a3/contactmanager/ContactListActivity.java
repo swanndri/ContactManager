@@ -131,6 +131,7 @@ public class ContactListActivity extends Activity {
 	public void onResume(){
 		super.onResume();
 		search.setText("");
+		((ListView)findViewById(R.id.Contact_list)).requestFocus();
 		values = datasource.getAllContacts();
 		Collections.sort(values);
 		la = new ContactListAdapter(this, values);

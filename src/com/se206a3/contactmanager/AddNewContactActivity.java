@@ -20,6 +20,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.BitmapFactory;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.RelativeLayout.LayoutParams;
 
 public class AddNewContactActivity extends Activity {
 
@@ -40,6 +42,7 @@ public class AddNewContactActivity extends Activity {
 	private List<android.view.View> addCount = new ArrayList<android.view.View>();
 	private ImageView img;
 	private String selectedImagePath;
+	private int RESULT_LOAD_IMAGE = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,29 +59,33 @@ public class AddNewContactActivity extends Activity {
 	}
 
 	public void addPhoto(View V){
-		Intent intent = new Intent();
-		intent.setType("image/*");
-		intent.setAction(Intent.ACTION_GET_CONTENT);
-		startActivityForResult(Intent.createChooser(intent,"Select Picture"), SELECT_PICTURE);
+		Intent i = new Intent(
+				Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+				startActivityForResult(i, RESULT_LOAD_IMAGE);
 	}
 
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (resultCode == RESULT_OK) {
-			if (requestCode == SELECT_PICTURE) {
-				Uri selectedImageUri = data.getData();
-				selectedImagePath = getPath(selectedImageUri);
-				System.out.println("Image Path : " + selectedImagePath);
-				img.setImageURI(selectedImageUri);
-				img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
-			}
-		}
-	}
-	public String getPath(Uri uri) {
-		String[] projection = { MediaStore.Images.Media.DATA };
-		Cursor cursor = managedQuery(uri, projection, null, null, null);
-		int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-		cursor.moveToFirst();
-		return cursor.getString(column_index);
+	@Override
+	 protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+	     super.onActivityResult(requestCode, resultCode, data);
+	      
+	     if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+	         Uri selectedImage = data.getData();
+	         String[] filePathColumn = { MediaStore.Images.Media.DATA };
+	 
+	         Cursor cursor = getContentResolver().query(selectedImage,
+	                 filePathColumn, null, null, null);
+	         cursor.moveToFirst();
+	 
+	         int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+	         selectedImagePath = cursor.getString(columnIndex);
+	         cursor.close();
+	         
+	         img.setImageBitmap(BitmapFactory.decodeFile(selectedImagePath));
+             img.setLayoutParams(new LinearLayout.LayoutParams(-1,-1,3.0f));
+             
+	                      
+	         // String picturePath contains the path of selected Image
+	     }
 	}
 
 	/** 
